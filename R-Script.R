@@ -36,9 +36,22 @@ head(seoul_Bikes)
 ## Task 3 changing column date type to Date.
 ## Importing Library lubridate that helps fix Date, since we need to change the format of the date.
 library(lubridate)
-
+## Printing first 6 rows to show the old Date format.
+head(seoul_Bikes$Date)
 ## Changing the Column Date to type Date and putting it correct R format.
 seoul_Bikes$Date <- as.Date(parse_date_time(seoul_Bikes$Date,"dmy"))
+## Printing first 6 rows to show the new Date format.
+head(seoul_Bikes$Date)
+
+## Task 4 Adding new Column of FullDate 
+## Printing first 6 rows to show the old data structure without column
+head(seoul_Bikes$Date)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y")) 
+                                  , month = as.integer(format(Date, format="%m"))
+                                  ,day = as.integer(format(Date, format="%d"))
+                                  , hour = Hour , min = 0, sec = 0 ))
+## Printing first 6 rows to show the new data structure with FullDate column and its values.
+head(seoul_Bikes)
 
 
-  
