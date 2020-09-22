@@ -54,4 +54,49 @@ seoul_Bikes <- seoul_Bikes %>%
 ## Printing first 6 rows to show the new data structure with FullDate column and its values.
 head(seoul_Bikes)
 
+## Task 5 Changing the Levels of Factors and order of Holiday
+## Printing the 6 fist rows to show factor values before change and the class
+head(seoul_Bikes$Holiday)
+class(seoul_Bikes$Holiday)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Holiday = ifelse(Holiday == "No Holiday", "No", "Yes")) %>%
+  mutate(Holiday = factor(Holiday, levels = c("Yes", "No")))
+## Printing the 6 fist rows to show factor values before change of class
+head(seoul_Bikes$Holiday)
+class(seoul_Bikes$Holiday)
+
+## Task 6 Changing the Levels order of Season [Spring, Summer, Autumn and Winter]
+## Printing the 6 fist rows to show factor levels order before change and the class
+head(seoul_Bikes$Season)
+class(seoul_Bikes$Season)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Season = factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter")))
+## Printing the 6 fist rows to show factor levels order after the change of class
+head(seoul_Bikes$Season)
+class(seoul_Bikes$Season)
+
+## Task 7 Removing unwanted columns [visibility, dew point temperature, solar radiation, rainfall and snowfall]
+## Printing first 6 Rows to show the Data Structure of table before removing the columns.
+head(seoul_Bikes)
+seoul_Bikes <- seoul_Bikes %>%
+  select(-Visibility..10m., -Dew.point.temperature.C.,-Solar.Radiation..MJ.m2.,-Rainfall.mm.,-Snowfall..cm.)
+
+## Printing first 6 Rows to show the Data Structure of table after removing the columns.
+head(seoul_Bikes)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
