@@ -34,7 +34,11 @@ seoul_Bikes <- seoul_Bikes %>%
 head(seoul_Bikes)
 
 ## Task 3 changing column date type to Date.
-seoul_Bikes$Date <- as.Date(seoul_Bikes$Date)
+## Importing Library lubridate that helps fix Date, since we need to change the format of the date.
+library(lubridate)
+
+## Changing the Column Date to type Date and putting it correct R format.
+seoul_Bikes$Date <- as.Date(parse_date_time(seoul_Bikes$Date,"dmy"))
 
 
   
