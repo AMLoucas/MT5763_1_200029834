@@ -1,0 +1,270 @@
+---
+title: "MT5761 Individual Project"
+output: html_document
+author: 200029834
+---
+```{r setup, include=FALSE}
+## Global chunk variables to se for all script.
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = TRUE,
+                      message = FALSE)
+```
+<br/><br/>
+
+<p>
+During the process of the project we will be working with 2 specific data sets (CSV files.) 
+  
+  * BikeSeoul.csv
+  * BikeWashingtonDC.csv
+  
+These two data sets contain the number of bikes rented at each hour in each of the continents/states. In the beginning the two given data sets are "messy"/not clean . In the project we will apply Data Wrangling to the data, resulting in having a "tidy"/clean data set. Once the files are in the correct format, we will create different plots to explore the relationships between rented bikes in  Washington, D.C., USA with Seoul, South Korea . We will also use the plots to examine if these numbers are determined by the weather conditions (Humidity, Temperature, Wind Speed). Once we visualize all these summaries, we will apply statistical analysis on the data to understand the relationship of the data even more and predict future outcomes. \
+In this assignment we will apply:
+
+  * Data Wrangling
+  * Data Visualisation
+  * Statistical modelling
+  
+</p>
+
+## Data Wrangling :
+```{r, echo=FALSE}
+## Importing libraries needed to use specific functions commands.
+library(lubridate)
+library(tidyverse)
+```
+
+#### Seoul, South Korea Data File beginning state
+```{r,}
+seoul_Bikes <- read.csv("BikeSeoul.csv")
+head(seoul_Bikes)
+```
+
+<p>
+Above we can see the  beginning state of file. We can notice that their are some issues with the Data Structure of the data set.
+  
+  * Column names are too long [Rented.Bike.Count, Solar.Radiation..MJ.m2., ...]
+  * Unclear column names (too much notation that creates confusion) [Dew.point.temperature.C. ,]
+  * Values are too long and take more time to code ['No Holiday']
+
+These problems create clutter in the data and make it harder for us to read it. In the first glimpse the data is difficult to understand.
+</p>
+<br><br />
+
+###### [TASK 1]
+<p>
+Our first task in our Data Wrangling is to remove all the rows that indicate a bike was not rented, after remove the column 'Functioning Day' which specifies this data. \
+**Implemantation idea** \
+Column 'Functioning Day' states if a bike was rented or not. We will have to filter through the rows and obtaining the records that have value "Yes" for attribute 'Functioning Day'. These are the records that a bike was rented. Once we have obtained these rows we can remove the column 'Functioning Day'.
+</p>
+```{r}
+## Number of rows before removing unneeded records are:
+nrow(seoul_Bikes)
+seoul_Bikes <- seoul_Bikes %>%
+  filter(Functioning.Day != "No") %>% ## Collect rows with value Yes in column Functioning.Day
+  select(-Functioning.Day) ## Remove column Functioning.Day
+## Number of rows after removing unneeded records are:
+nrow(seoul_Bikes)
+```
+<br><br />
+
+###### [TASK 2] Renaming Column Names needed
+<p>
+Our second task is to rename some column names to more appropriate ones. \
+From our first glimpse of the table we can notice that some column names do not have appropriate names.
+
+  * 'Rented.Bike.Count' to 'Count'
+  * 'Temperature.C.' to 'Temperature'
+  * 'Wind.speed..m.s.' to 'WindSpeed'
+  * 'Seasons' to 'Season'
+  * 'Humidity...' to 'Humidity'
+
+**Implemantation idea** \
+Using function rename() from tidyverse we can simply rename the column names to more appropriate ones.
+</p>
+```{r}
+## Header Names before Renaming
+names(seoul_Bikes)
+seoul_Bikes <- seoul_Bikes %>%
+  rename(Count = Rented.Bike.Count, ## Using function we are renaming the columns.
+         Temperature = Temperature.C., 
+         WindSpeed = Wind.speed..m.s., 
+         Season = Seasons,
+         Humidity = Humidity...)
+## Header Names after Renaming
+names(seoul_Bikes)
+```
+<br><br />
+
+###### [TASK 3] 
+Our third task is to convert column Date from type 'character' to type to 'Date'. \
+**Implemantation idea** \
+With the help of tidyverse function 'as_date()' we will change the type/class of the attribute.
+```{r}
+## Printing class of column Date before mutation.
+class(seoul_Bikes$Date)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Date = (as_date(parse_date_time(Date,"dmy")))) ## we need to specify 'dmy' to tell function in what format our date is in now. Because the format of R is in Years-Months-Days
+## Printing class of column Date after mutation.
+class(seoul_Bikes$Date)
+```
+<br><br />
+
+###### [TASK 4]
+Our fourth task is to add a new column with name 'FullDate' which will hold the Date and Hour of the day the bike was rented in format 'Y-M-D H:M:S' \
+**Implemantation idea** \
+With help of package lubridate we have a function called 'make_datetime' which does this action for us in the format asked.
+```{r}
+## Printing column names to show that FullDate does not exist.
+names(seoul_Bikes)
+## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
+                                  , month = as.integer(format(Date, format="%m"))
+                                  ,day = as.integer(format(Date, format="%d"))
+                                  , hour = Hour , min = 0, sec = 0 ))
+
+## Printing column names to show creation of FullDate.
+names(seoul_Bikes)
+## Printing first 6 rows of FullDate to show the value is in correct format.
+head(seoul_Bikes$FullDate)
+```
+<br><br />
+
+###### [TASK 5] 
+Our fifth task is to change Holiday values:
+  
+  * 'No Holiday' to 'No'
+  * 'Holiday' to 'Yes'
+
+Additionally to change the column type/class from 'character' to 'factor'. \
+The reason we want to apply this change is to be able order our data to the bikes rented during a holiday and the onces rented when it was not a holiday. Factor type allows us to categorize data. \
+**Implemantation idea** \
+Using tidyverse function mutate in combination with ifelse conditional statement we will change the record values. Once the inputs have changed we create it to factors/category with the order :
+
+  * Yes > No
+  
+```{r}
+## Printing the 6 fist rows to show factor values before changing
+head(seoul_Bikes$Holiday)
+## Printing the class of Holiday to show its a 'character'
+class(seoul_Bikes$Holiday)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Holiday = ifelse(Holiday == "No Holiday", "No", "Yes")) %>% ## Changing values to Yes & No
+  mutate(Holiday = factor(Holiday, levels = c("Yes", "No"))) ## Changing type to factor with seq order.
+## Printing the 6 fist rows to show factor values have changed.
+head(seoul_Bikes$Holiday)
+## Printing the class of Holiday to show its a 'factor'
+class(seoul_Bikes$Holiday)
+```
+<br><br />
+
+###### [TASK 6] 
+Our sixth task is to change the order of the Factor levels from column Season to the order:
+
+  * Spring
+  * Summer
+  * Autumn
+  * Winter
+
+From highest to lowest. \
+**Implemantation idea** \
+Using tidyverse 'mutate()' function, we will convert the column to a factor and specify the order of the levels we want.
+```{r}
+## Printing class of the column to show its not a factor yet.
+class(seoul_Bikes$Season)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Season = factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter")))
+## Printing the 6 fist rows to show factor levels order after the change of class
+head(seoul_Bikes$Season)
+```
+<br><br />
+
+###### [TASK 7]
+Our seventh and final task for cleaning the first data set is to removing unwanted columns : 
+
+ * visibility
+ * dew point temperature
+ * solar radiation
+ * rainfall
+ * snowfall
+
+**Implemantation idea** \
+Using tidyverse function 'select' and the notation of the '-' we will remove the unwanted columns
+```{r}
+## Printing the column names of the table before removing unwanted data.
+names(seoul_Bikes)
+seoul_Bikes <- seoul_Bikes %>%
+  select(-Visibility..10m., ## '-' means remove the column insted of selecting it.
+         -Dew.point.temperature.C.,
+         -Solar.Radiation..MJ.m2.,
+         -Rainfall.mm.,
+         -Snowfall..cm.)
+
+## Printing column names and first 6 rows to show the end result of the data that has been cleaned.
+names(seoul_Bikes)
+```
+<br><br />
+
+After applying all these methods on the data set, we managed to clean the data and bring it to a 'tidy' state. Now the data is easier to read and manipulate in plotting and statistical analysis.
+
+###### The result of Seoul, South Korea Data File after Data Wrangling is : 
+```{r,}
+head(seoul_Bikes)
+```
+<br><br />
+
+#### Washington DC, USA Data File beginning state
+```{r,}
+washington_Bikes <- read.csv("BikeWashingtonDC.csv")
+head(washington_Bikes)
+```
+
+
+
+
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+```
+
+
+
+
+Show a link [name you wany yo show](www.google.com)
+
+
+
+
+```{r, message=FALSE, fig.align='center', fig.height=8}
+## aligns the plot/figure in the center
+## height/width gives size  in inches
+
+
+
+```
+
+
+
+
+
+
+

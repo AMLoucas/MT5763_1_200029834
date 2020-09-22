@@ -3,6 +3,8 @@
 ## GitHub Cloning URL : https://github.com/AMLoucas/MT5763_1_200029834.git
 
 ## Importing libray tidyverse
+## Importing Library lubridate that helps fix Date, since we need to change the format of the date.
+library(lubridate)
 library(tidyverse)
 
 ## Reading CSV files to apply computations on.
@@ -25,21 +27,24 @@ nrow(seoul_Bikes)
 ## New Table after structure after removing Column Functioning.Day
 head(seoul_Bikes)
 
-## Task 2 Renaming Column Names Where needed [Date,Count,Hour,Temperature,WindSpeed,Season,Holidy]
+## Task 2 Renaming Column Names Where needed [Date,Count,Hour,Humidity,Temperature,WindSpeed,Season,Holiday]
 ## Header Names before Renaming
 head(seoul_Bikes)
 seoul_Bikes <- seoul_Bikes %>%
-  rename(Count = Rented.Bike.Count, Temperature = Temperature.C., WindSpeed = Wind.speed..m.s., Season = Seasons)
+  rename(Count = Rented.Bike.Count, 
+         Temperature = Temperature.C., 
+         WindSpeed = Wind.speed..m.s., 
+         Season = Seasons,
+         Humidity = Humidity...)
 ## Header Names after Renaming
 head(seoul_Bikes)
 
 ## Task 3 changing column date type to Date.
-## Importing Library lubridate that helps fix Date, since we need to change the format of the date.
-library(lubridate)
+
 ## Printing first 6 rows to show the old Date format.
 head(seoul_Bikes$Date)
 ## Changing the Column Date to type Date and putting it correct R format.
-seoul_Bikes$Date <- as.Date(parse_date_time(seoul_Bikes$Date,"dmy"))
+seoul_Bikes$Date <- as_date(parse_date_time(seoul_Bikes$Date,"dmy"))
 ## Printing first 6 rows to show the new Date format.
 head(seoul_Bikes$Date)
 
@@ -52,7 +57,7 @@ seoul_Bikes <- seoul_Bikes %>%
                                   ,day = as.integer(format(Date, format="%d"))
                                   , hour = Hour , min = 0, sec = 0 ))
 ## Printing first 6 rows to show the new data structure with FullDate column and its values.
-head(seoul_Bikes)
+head(seoul_Bikes$FullDate)
 
 ## Task 5 Changing the Levels of Factors and order of Holiday
 ## Printing the 6 fist rows to show factor values before change and the class
