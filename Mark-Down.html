@@ -368,7 +368,12 @@ summary {
 </div>
 
 
-<p><br /><br /></p>
+<p> <!-- chnage line symbol --></p>
+<div id="introduction" class="section level2">
+<h2>INTRODUCTION :</h2>
+<p>
+The purpose of the individual project is to clean two data-sets which will later allow us to compare them and combine their data in a way where we will be able to obtain important information. In the project we are required to use version control system called ‘git’ and create a report using R Markdown.
+</p>
 <p>
 <p>During the process of the project we will be working with 2 specific data sets (CSV files.)</p>
 <ul>
@@ -376,17 +381,18 @@ summary {
 <li>BikeWashingtonDC.csv</li>
 </ul>
 <p>These two data sets contain the number of bikes rented at each hour in each of the continents/states. In the beginning the two given data sets are “messy”/not clean . In the project we will apply Data Wrangling to the data, resulting in having a “tidy”/clean data set. Once the files are in the correct format, we will create different plots to explore the relationships between rented bikes in Washington, D.C., USA with Seoul, South Korea . We will also use the plots to examine if these numbers are determined by the weather conditions (Humidity, Temperature, Wind Speed). Once we visualize all these summaries, we will apply statistical analysis on the data to understand the relationship of the data even more and predict future outcomes.<br />
-In this assignment we will apply:</p>
+The given techniques will be applied on the two CSV files data:</p>
 <ul>
 <li>Data Wrangling</li>
 <li>Data Visualisation</li>
 <li>Statistical modelling</li>
 </ul>
 </p>
+</div>
 <div id="data-wrangling" class="section level2">
-<h2>Data Wrangling :</h2>
-<div id="seoul-south-korea-data-file-beginning-state" class="section level4">
-<h4>Seoul, South Korea Data File beginning state</h4>
+<h2>DATA WRANGLING :</h2>
+<div id="seoul-south-korea-data-file-beginning-state" class="section level3">
+<h3>Seoul, South Korea Data File beginning state</h3>
 <pre class="r"><code>seoul_Bikes &lt;- read.csv(&quot;BikeSeoul.csv&quot;)
 head(seoul_Bikes)</code></pre>
 <pre><code>##         Date Rented.Bike.Count Hour Temperature.C. Humidity... Wind.speed..m.s.
@@ -411,17 +417,17 @@ head(seoul_Bikes)</code></pre>
 ## 5            0             0  Winter No Holiday             Yes
 ## 6            0             0  Winter No Holiday             Yes</code></pre>
 <p>
-<p>Above we can see the beginning state of file. We can notice that their are some issues with the Data Structure of the data set.</p>
+<p>Above we can see the beginning state of the file(“BikeSeoul.csv”). We can notice that their are some issues with the Data Structure of the data set.</p>
 <ul>
 <li>Column names are too long [Rented.Bike.Count, Solar.Radiation..MJ.m2., …]</li>
 <li>Unclear column names (too much notation that creates confusion) [Dew.point.temperature.C. ,]</li>
 <li>Values are too long and take more time to code [‘No Holiday’]</li>
 </ul>
-These problems create clutter in the data and make it harder for us to read it. In the first glimpse the data is difficult to understand.
+These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract estimates.
 </p>
 <p><br><br /></p>
-<div id="task-1" class="section level6">
-<h6>[TASK 1]</h6>
+<div id="task-1" class="section level4">
+<h4>[TASK 1]</h4>
 <p>
 Our first task in our Data Wrangling is to remove all the rows that indicate a bike was not rented, after remove the column ‘Functioning Day’ which specifies this data.<br />
 <strong>Implemantation idea</strong><br />
@@ -438,8 +444,8 @@ nrow(seoul_Bikes)</code></pre>
 <pre><code>## [1] 8465</code></pre>
 <p><br><br /></p>
 </div>
-<div id="task-2-renaming-column-names-needed" class="section level6">
-<h6>[TASK 2] Renaming Column Names needed</h6>
+<div id="task-2" class="section level4">
+<h4>[TASK 2]</h4>
 <p>
 <p>Our second task is to rename some column names to more appropriate ones.<br />
 From our first glimpse of the table we can notice that some column names do not have appropriate names.</p>
@@ -479,11 +485,13 @@ names(seoul_Bikes)</code></pre>
 ## [13] &quot;Holiday&quot;</code></pre>
 <p><br><br /></p>
 </div>
-<div id="task-3" class="section level6">
-<h6>[TASK 3]</h6>
-<p>Our third task is to convert column Date from type ‘character’ to type to ‘Date’.<br />
+<div id="task-3" class="section level4">
+<h4>[TASK 3]</h4>
+<p>
+Our third task is to convert column Date from type ‘character’ to type to ‘Date’.<br />
 <strong>Implemantation idea</strong><br />
-With the help of tidyverse function ‘as_date()’ we will change the type/class of the attribute.</p>
+With the help of tidyverse function ‘as_date()’ we will change the type/class of the attribute.
+</p>
 <pre class="r"><code>## Printing class of column Date before mutation.
 class(seoul_Bikes$Date)</code></pre>
 <pre><code>## [1] &quot;character&quot;</code></pre>
@@ -494,11 +502,13 @@ class(seoul_Bikes$Date)</code></pre>
 <pre><code>## [1] &quot;Date&quot;</code></pre>
 <p><br><br /></p>
 </div>
-<div id="task-4" class="section level6">
-<h6>[TASK 4]</h6>
-<p>Our fourth task is to add a new column with name ‘FullDate’ which will hold the Date and Hour of the day the bike was rented in format ‘Y-M-D H:M:S’<br />
+<div id="task-4" class="section level4">
+<h4>[TASK 4]]</h4>
+<p>
+Our fourth task is to add a new column with name ‘FullDate’ which will hold the Date and Hour of the day the bike was rented in format ‘Y-M-D H:M:S’<br />
 <strong>Implemantation idea</strong><br />
-With help of package lubridate we have a function called ‘make_datetime’ which does this action for us in the format asked.</p>
+With help of package lubridate we have a function called ‘make_datetime’ which does this action for us in the format asked.
+</p>
 <pre class="r"><code>## Printing column names to show that FullDate does not exist.
 names(seoul_Bikes)</code></pre>
 <pre><code>##  [1] &quot;Date&quot;                     &quot;Count&quot;                   
@@ -531,8 +541,9 @@ head(seoul_Bikes$FullDate)</code></pre>
 ## [5] &quot;2017-12-01 04:00:00 UTC&quot; &quot;2017-12-01 05:00:00 UTC&quot;</code></pre>
 <p><br><br /></p>
 </div>
-<div id="task-5" class="section level6">
-<h6>[TASK 5]</h6>
+<div id="task-5" class="section level4">
+<h4>[TASK 5]</h4>
+<p>
 <p>Our fifth task is to change Holiday values:</p>
 <ul>
 <li>‘No Holiday’ to ‘No’</li>
@@ -545,6 +556,7 @@ Using tidyverse function mutate in combination with ifelse conditional statement
 <ul>
 <li>Yes &gt; No</li>
 </ul>
+</p>
 <pre class="r"><code>## Printing the 6 fist rows to show factor values before changing
 head(seoul_Bikes$Holiday)</code></pre>
 <pre><code>## [1] &quot;No Holiday&quot; &quot;No Holiday&quot; &quot;No Holiday&quot; &quot;No Holiday&quot; &quot;No Holiday&quot;
@@ -564,8 +576,9 @@ class(seoul_Bikes$Holiday)</code></pre>
 <pre><code>## [1] &quot;factor&quot;</code></pre>
 <p><br><br /></p>
 </div>
-<div id="task-6" class="section level6">
-<h6>[TASK 6]</h6>
+<div id="task-6" class="section level4">
+<h4>[TASK 6]</h4>
+<p>
 <p>Our sixth task is to change the order of the Factor levels from column Season to the order:</p>
 <ul>
 <li>Spring</li>
@@ -573,9 +586,10 @@ class(seoul_Bikes$Holiday)</code></pre>
 <li>Autumn</li>
 <li>Winter</li>
 </ul>
-<p>From highest to lowest.<br />
+From highest to lowest.<br />
 <strong>Implemantation idea</strong><br />
-Using tidyverse ‘mutate()’ function, we will convert the column to a factor and specify the order of the levels we want.</p>
+Using tidyverse ‘mutate()’ function, we will convert the column to a factor and specify the order of the levels we want.
+</p>
 <pre class="r"><code>## Printing class of the column to show its not a factor yet.
 class(seoul_Bikes$Season)</code></pre>
 <pre><code>## [1] &quot;character&quot;</code></pre>
@@ -587,8 +601,9 @@ head(seoul_Bikes$Season)</code></pre>
 ## Levels: Spring Summer Autumn Winter</code></pre>
 <p><br><br /></p>
 </div>
-<div id="task-6-1" class="section level6">
-<h6>[TASK 6]</h6>
+<div id="task-7" class="section level4">
+<h4>[TASK 7]</h4>
+<p>
 <p>Our seventh and final task for cleaning the first data set is to removing unwanted columns :</p>
 <ul>
 <li>visibility</li>
@@ -597,8 +612,9 @@ head(seoul_Bikes$Season)</code></pre>
 <li>rainfall</li>
 <li>snowfall</li>
 </ul>
-<p><strong>Implemantation idea</strong><br />
-Using tidyverse function ‘select’ and the notation of the ‘-’ we will remove the unwanted columns</p>
+<strong>Implemantation idea</strong><br />
+Using tidyverse function ‘select’ and the notation of the ‘-’ we will remove the unwanted columns
+</p>
 <pre class="r"><code>## Printing the column names of the table before removing unwanted data.
 names(seoul_Bikes)</code></pre>
 <pre><code>##  [1] &quot;Date&quot;                     &quot;Count&quot;                   
@@ -619,9 +635,10 @@ names(seoul_Bikes)</code></pre>
 names(seoul_Bikes)</code></pre>
 <pre><code>## [1] &quot;Date&quot;        &quot;Count&quot;       &quot;Hour&quot;        &quot;Temperature&quot; &quot;Humidity&quot;   
 ## [6] &quot;WindSpeed&quot;   &quot;Season&quot;      &quot;Holiday&quot;     &quot;FullDate&quot;</code></pre>
-<p><br><br /></p>
-<p>After applying all these methods on the data set, we managed to clean the data and bring it to a ‘tidy’ state. Now the data is easier to read and manipulate in plotting and statistical analysis.</p>
-</div>
+<br><br />
+<p>
+After applying all these methods on the data set, we managed to clean the data and bring it to a ‘tidy’ state. Now the data is easier to read and manipulate in plotting and statistical analysis.
+</p>
 <div id="the-result-of-seoul-south-korea-data-file-after-data-wrangling-is" class="section level6">
 <h6>The result of Seoul, South Korea Data File after Data Wrangling is :</h6>
 <pre class="r"><code>head(seoul_Bikes)</code></pre>
@@ -642,8 +659,9 @@ names(seoul_Bikes)</code></pre>
 <p><br><br /></p>
 </div>
 </div>
-<div id="washington-dc-usa-data-file-beginning-state" class="section level4">
-<h4>Washington DC, USA Data File beginning state</h4>
+</div>
+<div id="washington-dc-usa-data-file-beginning-state" class="section level3">
+<h3>Washington DC, USA Data File beginning state</h3>
 <pre class="r"><code>washington_Bikes &lt;- read.csv(&quot;BikeWashingtonDC.csv&quot;)
 head(washington_Bikes)</code></pre>
 <pre><code>##   instant     dteday season yr mnth hr holiday weekday workingday weathersit
@@ -660,10 +678,320 @@ head(washington_Bikes)</code></pre>
 ## 4 0.24 0.2879 0.75    0.0000      3         10  13
 ## 5 0.24 0.2879 0.75    0.0000      0          1   1
 ## 6 0.24 0.2576 0.75    0.0896      0          1   1</code></pre>
+<p>
+<p>Above we can see the beginning state of the file (“BikeWashingtonDC.csv”). We can notice that their are some issues with the Data Structure of the data set.</p>
+<ul>
+<li>Column names are acronyms, users can distinguish differently [cnt, temp, atemp, hum, …]</li>
+<li>Values are not clear [Column season has values (1,2,3,4), which number represents which season?]</li>
+<li>Some values are in binary values which not evryone understands [holiday, workingday]</li>
+<li>We have some kind of repeated data [dteday -&gt; (yr,mnth,weekday)], [workingday is the same as holiday]</li>
+</ul>
+These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract estimates.
+</p>
+<p><br><br /></p>
+<div id="task-1-1" class="section level4">
+<h4>[TASK 1]</h4>
+<p>
+<p>Our first task in our Data Wrangling for the file (“BikeWashingtonDC.csv”) is to remove all some columns that are unwanted and create repeatition in our data.<br />
+</p>
+<ul>
+<li>instant (unique number for each record)</li>
+<li>yr (year)</li>
+<li>mnth (month)</li>
+<li>weekday (day of the week)</li>
+<li>workingday (if the specific day was a holiday or not)</li>
+<li>weathersit (weather condition)</li>
+<li>atemp (normalized feeling temparature)</li>
+<li>casual (number of bikes rented by casul users)</li>
+<li>registered (number of bikes rented by registered users)</li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function select() form tidyverse package and the notation ‘-’ we can select all the columns we want to remove.
+</p>
+<pre class="r"><code>## Columns in the file before removing
+names(washington_Bikes)</code></pre>
+<pre><code>##  [1] &quot;instant&quot;    &quot;dteday&quot;     &quot;season&quot;     &quot;yr&quot;         &quot;mnth&quot;      
+##  [6] &quot;hr&quot;         &quot;holiday&quot;    &quot;weekday&quot;    &quot;workingday&quot; &quot;weathersit&quot;
+## [11] &quot;temp&quot;       &quot;atemp&quot;      &quot;hum&quot;        &quot;windspeed&quot;  &quot;casual&quot;    
+## [16] &quot;registered&quot; &quot;cnt&quot;</code></pre>
+<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
+  select(-instant ,  ## &#39;-&#39; means remove the column from the selected data.
+         -yr ,
+         -mnth ,
+         -weekday ,
+         -workingday ,
+         -weathersit ,
+         -atemp ,
+         -casual ,
+         -registered )
+## Columns in file after removing.
+names(washington_Bikes)</code></pre>
+<pre><code>## [1] &quot;dteday&quot;    &quot;season&quot;    &quot;hr&quot;        &quot;holiday&quot;   &quot;temp&quot;      &quot;hum&quot;      
+## [7] &quot;windspeed&quot; &quot;cnt&quot;</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-2-1" class="section level4">
+<h4>[TASK 2]</h4>
+<p>
+<p>Our second task is to rename the remaining to columns to match exactly as the seoul file. Making the columns names exactly the same will help with creating a combination of the two tables (join), so it has to be the same case aswell.<br />
+</p>
+<ul>
+<li>‘dteday’ to ‘Date’</li>
+<li>‘cnt’ to ‘Count’</li>
+<li>‘hr’ to ‘Hour’</li>
+<li>‘temp’ to ‘Temperature’</li>
+<li>‘hum’ to ‘Humidity’</li>
+<li>‘windspeed’ to ‘WindSpeed’</li>
+<li>‘season’ to ‘Season’</li>
+<li>‘holiday’ to ‘Holiday’</li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function rename() form tidyverse package we can rename the already existing column names.
+</p>
+<pre class="r"><code>## Header Names before Renaming
+names(washington_Bikes)</code></pre>
+<pre><code>## [1] &quot;dteday&quot;    &quot;season&quot;    &quot;hr&quot;        &quot;holiday&quot;   &quot;temp&quot;      &quot;hum&quot;      
+## [7] &quot;windspeed&quot; &quot;cnt&quot;</code></pre>
+<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
+  rename(Count = cnt, ## Using function we are renaming the columns.
+         Temperature = temp, 
+         WindSpeed = windspeed, 
+         Season = season,
+         Humidity = hum,
+         Date = dteday,
+         Hour = hr,
+         Holiday = holiday)
+## Header Names after Renaming
+names(washington_Bikes)</code></pre>
+<pre><code>## [1] &quot;Date&quot;        &quot;Season&quot;      &quot;Hour&quot;        &quot;Holiday&quot;     &quot;Temperature&quot;
+## [6] &quot;Humidity&quot;    &quot;WindSpeed&quot;   &quot;Count&quot;</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-3-1" class="section level4">
+<h4>[TASK 3]</h4>
+<p>
+<p>Our third task is to convert the Humidity field’s values to a percentage. At the moment the field Humidity in the two files are given two different measurements, we will have both in percentage after this task.<br />
+</p>
+<ul>
+<li>Value is divided by 100 at the moment, so we will need to multiply it by 100 to get it to a % value.</li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
+</p>
+<pre class="r"><code>## Printing first 6 rows to show the value now in decimal
+head(washington_Bikes$Humidity)</code></pre>
+<pre><code>## [1] 0.81 0.80 0.80 0.75 0.75 0.75</code></pre>
+<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(Humidity = Humidity * 100) ## multiply existing value with 100 to make a percentage value.
+## Printing first 6 rows to show values out of a hundred (in %), smallest is 0 and largest 100.
+head(washington_Bikes$Humidity)</code></pre>
+<pre><code>## [1] 81 80 80 75 75 75</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-4-1" class="section level4">
+<h4>[TASK 4]</h4>
+<p>
+<p>Our fourth task is to convert the Temperature field’s values to degree celsius At the moment the field Temperature in the two files are given two different measurements, we will have both in percentage after this task. Temperature in Washington file is normalized.<br />
+</p>
+<ul>
+<li>Value is normalized which means formula [(value -Tmin)/Tmax-Tmin] was applied on it. [Tmin = -8, Tmax = 39]</li>
+<li>We have to reverse this fomrula which means we have to apply formula [(value)*(Tmax-Tmin)+Tmin] . [Tmin = -8, Tmax = 39]</li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
+</p>
+<pre class="r"><code>## Printing first 6 rows to show the value are now normalized.
+head(washington_Bikes$Temperature)</code></pre>
+<pre><code>## [1] 0.24 0.22 0.22 0.24 0.24 0.24</code></pre>
+<pre class="r"><code>Tmin &lt;- -8
+Tmax &lt;- 39
+washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(Temperature = (Temperature)*(Tmax-Tmin)+Tmin) ## apply formula so we convert back to degree celsius.
+## Printing first 6 rows to show values out of in degree celsius.
+head(washington_Bikes$Temperature)</code></pre>
+<pre><code>## [1] 3.28 2.34 2.34 3.28 3.28 3.28</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-5-1" class="section level4">
+<h4>[TASK 5]</h4>
+<p>
+<p>Our fifth task is to convert the WindSpeed field’s values to m/s At the moment the field WindSpeed in the two files are given two different measurements, we will have both in percentage after this task. WindSpeed fieald in washinghton file is divided by 69km/s while in the Seoul file is in m/s<br />
+</p>
+<ul>
+<li>First we need to conver WindSpeed to km/s, so we multiply by 69 because its divided by 69km/x</li>
+<li>After we apply the given formula “Wind (m/s) = 0.2777778 × Wind (km/h)” formula was found found from <a href="https://goodcalculators.com/wind-speed-converter/">goodcalculator.com</a></li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
+</p>
+<pre class="r"><code>## Printing first 6 rows to show the value are in (km/s)/69
+head(washington_Bikes$WindSpeed)</code></pre>
+<pre><code>## [1] 0.0000 0.0000 0.0000 0.0000 0.0000 0.0896</code></pre>
+<pre class="r"><code>makeToKM &lt;- 69
+multiplayerConstant &lt;- 0.2777778
+washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(WindSpeed = ((WindSpeed)*(makeToKM))*multiplayerConstant) ## apply formula so we convert back to degree m/s
+## Printing first 6 rows to show values are now in m/s
+head(washington_Bikes$WindSpeed)</code></pre>
+<pre><code>## [1] 0.000000 0.000000 0.000000 0.000000 0.000000 1.717333</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-6-1" class="section level4">
+<h4>[TASK 6]</h4>
+<p>
+<p>Our sixth task is to change the values of field season. After convert the class to a factor and give the factor levels a specific order.<br />
+</p>
+<ul>
+<li>‘1’ to ‘Winter’</li>
+<li>‘2’ to ‘Spring’</li>
+<li>‘3’ to ‘Summer’</li>
+<li>‘4’ to ‘Autumn’</li>
+</ul>
+<p>The order the levels must follow are:</p>
+<ul>
+<li>Spring &gt; Summer &gt; Autumn &gt; Winter</li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function mutate() form tidyverse package and ifelse conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field to a factor.
+</p>
+<pre class="r"><code>## Printing the 6 fist rows to show factor values before changing
+head(washington_Bikes$Season)</code></pre>
+<pre><code>## [1] 1 1 1 1 1 1</code></pre>
+<pre class="r"><code>## Printing the class of Season to show its a &#39;integer&#39;
+class(washington_Bikes$Season)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(Season = ifelse(Season == 1, &quot;Winter&quot;, Season)) %&gt;% ## Changing values to the appropriate factors Winter | Summer | Autumn | Spring.
+  mutate(Season = ifelse(Season == 2, &quot;Spring&quot;, Season)) %&gt;% 
+  mutate(Season = ifelse(Season == 3, &quot;Summer&quot;, Season)) %&gt;% 
+  mutate(Season = ifelse(Season == 4, &quot;Autumn&quot;, Season)) %&gt;% 
+  mutate(Season = factor(Season, levels = c(&quot;Spring&quot;, &quot;Summer&quot;, &quot;Autumn&quot;, &quot;Winter&quot;))) ## Changing type to factor with seq order.
+## Printing the 6 fist rows to show factor values have changed.
+head(washington_Bikes$Season)</code></pre>
+<pre><code>## [1] Winter Winter Winter Winter Winter Winter
+## Levels: Spring Summer Autumn Winter</code></pre>
+<pre class="r"><code>## Printing the class of Season to show its a &#39;factor&#39;
+class(washington_Bikes$Season)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-7-1" class="section level4">
+<h4>[TASK 7]</h4>
+<p>
+<p>Our seventh task is to convert the Holiday values to Yes or No. After we need to convert the type to factor, so the data can be categorzied.<br />
+</p>
+<ul>
+<li>0 to ‘No’</li>
+<li>1 to ‘Yes’</li>
+</ul>
+<strong>Implemantation idea</strong><br />
+Using function mutate() form tidyverse package and ifelse conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field to a factor.
+</p>
+<pre class="r"><code>## Printing the 6 fist rows to show factor values before changing
+head(washington_Bikes$Holiday)</code></pre>
+<pre><code>## [1] 0 0 0 0 0 0</code></pre>
+<pre class="r"><code>## Printing the class of Holiday to show its a &#39;character&#39;
+class(washington_Bikes$Holiday)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(Holiday = ifelse(Holiday == 0, &quot;No&quot;, &quot;Yes&quot;)) %&gt;% ## Changing values to Yes &amp; No (0=No, 1=Yes).
+  mutate(Holiday = factor(Holiday, levels = c(&quot;Yes&quot;, &quot;No&quot;))) ## Changing type to factor with seq order.
+## Printing the 6 fist rows to show factor values have changed.
+head(washington_Bikes$Holiday)</code></pre>
+<pre><code>## [1] No No No No No No
+## Levels: Yes No</code></pre>
+<pre class="r"><code>## Printing the class of Holiday to show its a &#39;factor&#39;
+class(washington_Bikes$Holiday)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-8" class="section level4">
+<h4>[TASK 8]</h4>
+<p>
+<p>Our eight task is to convert the class of field Date from ‘character’ to ‘Date’.<br />
+</p>
+<strong>Implemantation idea</strong><br />
+With the help of tidyverse function ‘as_date()’ we will change the type/class of the attribute to date.
+</p>
+<pre class="r"><code>## Printing class of column Date before mutation.
+class(washington_Bikes$Date)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(Date = (as_date(parse_date_time(Date,&quot;ymd&quot;)))) ## we need to specify &#39;ymd&#39; to tell function in what format our date is in now. Because the format of R is in Years-Months-Days
+## Printing class of column Date after mutation.
+class(washington_Bikes$Date)</code></pre>
+<pre><code>## [1] &quot;Date&quot;</code></pre>
+<p><br><br /></p>
+</div>
+<div id="task-9" class="section level4">
+<h4>[TASK 9]</h4>
+<p>
+Our ninth task is to add a new column with name ‘FullDate’ which will hold the Date and Hour of the day the bike was rented, in format ‘Y-M-D H:M:S’<br />
+<strong>Implemantation idea</strong><br />
+With help of package lubridate we have a function called ‘make_datetime’ which does this action for us in the format asked.
+</p>
+<pre class="r"><code>## Printing column names to show that FullDate does not exist.
+names(washington_Bikes)</code></pre>
+<pre><code>## [1] &quot;Date&quot;        &quot;Season&quot;      &quot;Hour&quot;        &quot;Holiday&quot;     &quot;Temperature&quot;
+## [6] &quot;Humidity&quot;    &quot;WindSpeed&quot;   &quot;Count&quot;</code></pre>
+<pre class="r"><code>## as.integer(format(Date, format=&quot;%Y&quot;) -&gt; this command is needed to extract the correct number/attribute from column Date. &quot;%Y&quot; tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+washington_Bikes &lt;- washington_Bikes %&gt;%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format=&quot;%Y&quot;))
+                                  , month = as.integer(format(Date, format=&quot;%m&quot;))
+                                  ,day = as.integer(format(Date, format=&quot;%d&quot;))
+                                  , hour = Hour , min = 0, sec = 0 ))
+
+## Printing column names to show creation of FullDate.
+names(washington_Bikes)</code></pre>
+<pre><code>## [1] &quot;Date&quot;        &quot;Season&quot;      &quot;Hour&quot;        &quot;Holiday&quot;     &quot;Temperature&quot;
+## [6] &quot;Humidity&quot;    &quot;WindSpeed&quot;   &quot;Count&quot;       &quot;FullDate&quot;</code></pre>
+<pre class="r"><code>## Printing first 6 rows of FullDate to show the value is in correct format.
+head(washington_Bikes$FullDate)</code></pre>
+<pre><code>## [1] &quot;2011-01-01 00:00:00 UTC&quot; &quot;2011-01-01 01:00:00 UTC&quot;
+## [3] &quot;2011-01-01 02:00:00 UTC&quot; &quot;2011-01-01 03:00:00 UTC&quot;
+## [5] &quot;2011-01-01 04:00:00 UTC&quot; &quot;2011-01-01 05:00:00 UTC&quot;</code></pre>
+<br><br />
+<p>
+After applying all these methods on the data set, we managed to clean the data and bring it to a ‘tidy’ state. Now the data is easier to read and manipulate in plotting and statistical analysis. Additionally the data is now in the same state as Seoul file which will allow us to join/combile the data sets and explore different relationships
+</p>
+<div id="the-result-of-seoul-south-korea-data-file-after-data-wrangling-is-1" class="section level6">
+<h6>The result of Seoul, South Korea Data File after Data Wrangling is :</h6>
+<pre class="r"><code>head(washington_Bikes)</code></pre>
+<pre><code>##         Date Season Hour Holiday Temperature Humidity WindSpeed Count
+## 1 2011-01-01 Winter    0      No        3.28       81  0.000000    16
+## 2 2011-01-01 Winter    1      No        2.34       80  0.000000    40
+## 3 2011-01-01 Winter    2      No        2.34       80  0.000000    32
+## 4 2011-01-01 Winter    3      No        3.28       75  0.000000    13
+## 5 2011-01-01 Winter    4      No        3.28       75  0.000000     1
+## 6 2011-01-01 Winter    5      No        3.28       75  1.717333     1
+##              FullDate
+## 1 2011-01-01 00:00:00
+## 2 2011-01-01 01:00:00
+## 3 2011-01-01 02:00:00
+## 4 2011-01-01 03:00:00
+## 5 2011-01-01 04:00:00
+## 6 2011-01-01 05:00:00</code></pre>
+<p><br><br /></p>
+</div>
+</div>
+</div>
+</div>
+<div id="data-visualisation" class="section level2">
+<h2>DATA VISUALISATION :</h2>
+<p><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
 <p>Show a link <a href="www.google.com">name you wany yo show</a></p>
 <pre class="r"><code>## aligns the plot/figure in the center
 ## height/width gives size  in inches</code></pre>
-</div>
 </div>
 
 
