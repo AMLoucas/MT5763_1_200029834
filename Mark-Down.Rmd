@@ -12,12 +12,33 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ```{r}
 ## Functions that will be used in the program miltuple times.
+## For deleting unwanted xolumns.
 deleteColumn <- function(dataFrame, columns){
   for (col in columns){
     dataFrame <- dataFrame %>%
-      select(-col)
+      select(-col) ## '-' notation means to select all except the given column.
   }
   return(dataFrame)
+}
+
+## For converting a column to class Date.
+## formatDate is used because for the conversion you need to specify in what format your date is in.
+## Using functions that tidyverse and lubridate offer.
+convertDate <- function(dataFrame, formatDate){
+  dataFrame <- dataFrame %>%
+    mutate(Date = (as_date(parse_date_time(Date,formatDate)))) 
+  return(dataFrame)
+}
+
+## For Creating new Column FullDate holding Date and Hour of the day.
+createFullDate <- function(dataFrame){
+  dataFrame <- dataFrame %>%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
+                                  , month = as.integer(format(Date, format="%m"))
+                                  ,day = as.integer(format(Date, format="%d"))
+                                  , hour = Hour , min = 0, sec = 0 ))
+  return(dataFrame)
+  
 }
 ```
 
@@ -122,7 +143,7 @@ With the help of tidyverse function 'as_date()' we will change the type/class of
 ## Printing class of column Date before mutation.
 class(seoul_Bikes$Date)
 seoul_Bikes <- seoul_Bikes %>%
-  mutate(Date = (as_date(parse_date_time(Date,"dmy")))) ## we need to specify 'dmy' to tell function in what format our date is in now. Because the format of R is in Years-Months-Days
+  convertDate("dmy")
 ## Printing class of column Date after mutation.
 class(seoul_Bikes$Date)
 ```
@@ -139,11 +160,7 @@ With help of package lubridate we have a function called 'make_datetime' which d
 names(seoul_Bikes)
 ## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
 seoul_Bikes <- seoul_Bikes %>%
-  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
-                                  , month = as.integer(format(Date, format="%m"))
-                                  ,day = as.integer(format(Date, format="%d"))
-                                  , hour = Hour , min = 0, sec = 0 ))
-
+  createFullDate()
 ## Printing column names to show creation of FullDate.
 names(seoul_Bikes)
 ## Printing first 6 rows of FullDate to show the value is in correct format.
@@ -462,8 +479,10 @@ With the help of tidyverse function 'as_date()' we will change the type/class of
 ```{r}
 ## Printing class of column Date before mutation.
 class(washington_Bikes$Date)
+
 washington_Bikes <- washington_Bikes %>%
-  mutate(Date = (as_date(parse_date_time(Date,"ymd")))) ## we need to specify 'ymd' to tell function in what format our date is in now. Because the format of R is in Years-Months-Days
+  convertDate("ymd")
+
 ## Printing class of column Date after mutation.
 class(washington_Bikes$Date)
 ```
@@ -480,10 +499,7 @@ With help of package lubridate we have a function called 'make_datetime' which d
 names(washington_Bikes)
 ## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
 washington_Bikes <- washington_Bikes %>%
-  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
-                                  , month = as.integer(format(Date, format="%m"))
-                                  ,day = as.integer(format(Date, format="%d"))
-                                  , hour = Hour , min = 0, sec = 0 ))
+  createFullDate()
 
 ## Printing column names to show creation of FullDate.
 names(washington_Bikes)

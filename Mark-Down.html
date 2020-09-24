@@ -369,12 +369,33 @@ summary {
 
 
 <pre class="r"><code>## Functions that will be used in the program miltuple times.
+## For deleting unwanted xolumns.
 deleteColumn &lt;- function(dataFrame, columns){
   for (col in columns){
     dataFrame &lt;- dataFrame %&gt;%
-      select(-col)
+      select(-col) ## &#39;-&#39; notation means to select all except the given column.
   }
   return(dataFrame)
+}
+
+## For converting a column to class Date.
+## formatDate is used because for the conversion you need to specify in what format your date is in.
+## Using functions that tidyverse and lubridate offer.
+convertDate &lt;- function(dataFrame, formatDate){
+  dataFrame &lt;- dataFrame %&gt;%
+    mutate(Date = (as_date(parse_date_time(Date,formatDate)))) 
+  return(dataFrame)
+}
+
+## For Creating new Column FullDate holding Date and Hour of the day.
+createFullDate &lt;- function(dataFrame){
+  dataFrame &lt;- dataFrame %&gt;%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format=&quot;%Y&quot;))
+                                  , month = as.integer(format(Date, format=&quot;%m&quot;))
+                                  ,day = as.integer(format(Date, format=&quot;%d&quot;))
+                                  , hour = Hour , min = 0, sec = 0 ))
+  return(dataFrame)
+  
 }</code></pre>
 <p> <!-- chnage line symbol --></p>
 <div id="introduction" class="section level2">
@@ -504,7 +525,7 @@ With the help of tidyverse function ‘as_date()’ we will change the type/clas
 class(seoul_Bikes$Date)</code></pre>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <pre class="r"><code>seoul_Bikes &lt;- seoul_Bikes %&gt;%
-  mutate(Date = (as_date(parse_date_time(Date,&quot;dmy&quot;)))) ## we need to specify &#39;dmy&#39; to tell function in what format our date is in now. Because the format of R is in Years-Months-Days
+  convertDate(&quot;dmy&quot;)
 ## Printing class of column Date after mutation.
 class(seoul_Bikes$Date)</code></pre>
 <pre><code>## [1] &quot;Date&quot;</code></pre>
@@ -528,11 +549,7 @@ names(seoul_Bikes)</code></pre>
 ## [13] &quot;Holiday&quot;</code></pre>
 <pre class="r"><code>## as.integer(format(Date, format=&quot;%Y&quot;) -&gt; this command is needed to extract the correct number/attribute from column Date. &quot;%Y&quot; tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
 seoul_Bikes &lt;- seoul_Bikes %&gt;%
-  mutate(FullDate = make_datetime( year = as.integer(format(Date, format=&quot;%Y&quot;))
-                                  , month = as.integer(format(Date, format=&quot;%m&quot;))
-                                  ,day = as.integer(format(Date, format=&quot;%d&quot;))
-                                  , hour = Hour , min = 0, sec = 0 ))
-
+  createFullDate()
 ## Printing column names to show creation of FullDate.
 names(seoul_Bikes)</code></pre>
 <pre><code>##  [1] &quot;Date&quot;                     &quot;Count&quot;                   
@@ -927,7 +944,8 @@ With the help of tidyverse function ‘as_date()’ we will change the type/clas
 class(washington_Bikes$Date)</code></pre>
 <pre><code>## [1] &quot;character&quot;</code></pre>
 <pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
-  mutate(Date = (as_date(parse_date_time(Date,&quot;ymd&quot;)))) ## we need to specify &#39;ymd&#39; to tell function in what format our date is in now. Because the format of R is in Years-Months-Days
+  convertDate(&quot;ymd&quot;)
+
 ## Printing class of column Date after mutation.
 class(washington_Bikes$Date)</code></pre>
 <pre><code>## [1] &quot;Date&quot;</code></pre>
@@ -946,10 +964,7 @@ names(washington_Bikes)</code></pre>
 ## [6] &quot;Humidity&quot;    &quot;WindSpeed&quot;   &quot;Count&quot;</code></pre>
 <pre class="r"><code>## as.integer(format(Date, format=&quot;%Y&quot;) -&gt; this command is needed to extract the correct number/attribute from column Date. &quot;%Y&quot; tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
 washington_Bikes &lt;- washington_Bikes %&gt;%
-  mutate(FullDate = make_datetime( year = as.integer(format(Date, format=&quot;%Y&quot;))
-                                  , month = as.integer(format(Date, format=&quot;%m&quot;))
-                                  ,day = as.integer(format(Date, format=&quot;%d&quot;))
-                                  , hour = Hour , min = 0, sec = 0 ))
+  createFullDate()
 
 ## Printing column names to show creation of FullDate.
 names(washington_Bikes)</code></pre>
