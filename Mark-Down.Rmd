@@ -9,6 +9,18 @@ knitr::opts_chunk$set(echo = TRUE,
                       eval = TRUE,
                       message = FALSE)
 ```
+
+```{r}
+## Functions that will be used in the program miltuple times.
+deleteColumn <- function(dataFrame, columns){
+  for (col in columns){
+    dataFrame <- dataFrame %>%
+      select(-col)
+  }
+  return(dataFrame)
+}
+```
+
  \ <!-- chnage line symbol -->
  
 ## INTRODUCTION :
@@ -208,12 +220,13 @@ Using tidyverse function 'select' and the notation of the '-' we will remove the
 ```{r}
 ## Printing the column names of the table before removing unwanted data.
 names(seoul_Bikes)
+## Calling a self-declared function to undertaken given task.
 seoul_Bikes <- seoul_Bikes %>%
-  select(-Visibility..10m., ## '-' means remove the column insted of selecting it.
-         -Dew.point.temperature.C.,
-         -Solar.Radiation..MJ.m2.,
-         -Rainfall.mm.,
-         -Snowfall..cm.)
+  deleteColumn( c("Visibility..10m.",
+                  "Solar.Radiation..MJ.m2.",
+                  "Rainfall.mm.",
+                  "Dew.point.temperature.C.",
+                  "Snowfall..cm."))
 
 ## Printing column names and first 6 rows to show the end result of the data that has been cleaned.
 names(seoul_Bikes)
@@ -265,16 +278,17 @@ Using function select() form tidyverse package and the notation '-' we can selec
 ```{r}
 ## Columns in the file before removing
 names(washington_Bikes)
+## Calling self-declared function to undertake given task 
 washington_Bikes <- washington_Bikes %>%
-  select(-instant ,  ## '-' means remove the column from the selected data.
-         -yr ,
-         -mnth ,
-         -weekday ,
-         -workingday ,
-         -weathersit ,
-         -atemp ,
-         -casual ,
-         -registered )
+  deleteColumn( c("instant",
+                  "yr",
+                  "mnth",
+                  "weekday",
+                  "workingday",
+                  "weathersit",
+                  "atemp",
+                  "casual",
+                  "registered"))
 ## Columns in file after removing.
 names(washington_Bikes)
 ```
@@ -337,8 +351,8 @@ head(washington_Bikes$Humidity)
 <p>
 Our fourth task is to convert the Temperature field's values to degree celsius At the moment the field Temperature in the two files are given two different measurements, we will have both in percentage after this task. Temperature in Washington file is normalized. \
 
- * Value is normalized which means formula [(value -Tmin)/Tmax-Tmin] was applied on it. [Tmin = -8, Tmax = 39]
- * We have to reverse this fomrula which means we have to apply formula [(value)*(Tmax-Tmin)+Tmin] . [Tmin = -8, Tmax = 39]
+ * Value is normalized which means formula $[(value -Tmin)/Tmax-Tmin]$ was applied on it. [Tmin = -8, Tmax = 39]
+ * We have to reverse this fomrula which means we have to apply formula $[(value)*(Tmax-Tmin)+Tmin] $. [Tmin = -8, Tmax = 39]
 
 **Implemantation idea** \
 Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
@@ -361,7 +375,7 @@ head(washington_Bikes$Temperature)
 Our fifth task is to convert the WindSpeed field's values to m/s At the moment the field WindSpeed in the two files are given two different measurements, we will have both in percentage after this task. WindSpeed fieald in washinghton file is divided by 69km/s while in the Seoul file is in m/s \
 
   * First we need to conver WindSpeed to km/s, so we multiply by 69 because its divided by 69km/x
-  * After we apply the given formula "Wind (m/s) = 0.2777778 × Wind (km/h)" formula was found found from [goodcalculator.com](https://goodcalculators.com/wind-speed-converter/)
+  * After we apply the given formula $"Wind (m/s) = 0.2777778 × Wind (km/h)"$ formula was found found from [goodcalculator.com](https://goodcalculators.com/wind-speed-converter/)
   
 **Implemantation idea** \
 Using function mutate() from tidyverse package we can modify the existing columnn and its fields.

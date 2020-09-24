@@ -368,6 +368,14 @@ summary {
 </div>
 
 
+<pre class="r"><code>## Functions that will be used in the program miltuple times.
+deleteColumn &lt;- function(dataFrame, columns){
+  for (col in columns){
+    dataFrame &lt;- dataFrame %&gt;%
+      select(-col)
+  }
+  return(dataFrame)
+}</code></pre>
 <p> <!-- chnage line symbol --></p>
 <div id="introduction" class="section level2">
 <h2>INTRODUCTION :</h2>
@@ -624,12 +632,13 @@ names(seoul_Bikes)</code></pre>
 ##  [9] &quot;Solar.Radiation..MJ.m2.&quot;  &quot;Rainfall.mm.&quot;            
 ## [11] &quot;Snowfall..cm.&quot;            &quot;Season&quot;                  
 ## [13] &quot;Holiday&quot;                  &quot;FullDate&quot;</code></pre>
-<pre class="r"><code>seoul_Bikes &lt;- seoul_Bikes %&gt;%
-  select(-Visibility..10m., ## &#39;-&#39; means remove the column insted of selecting it.
-         -Dew.point.temperature.C.,
-         -Solar.Radiation..MJ.m2.,
-         -Rainfall.mm.,
-         -Snowfall..cm.)
+<pre class="r"><code>## Calling a self-declared function to undertaken given task.
+seoul_Bikes &lt;- seoul_Bikes %&gt;%
+  deleteColumn( c(&quot;Visibility..10m.&quot;,
+                  &quot;Solar.Radiation..MJ.m2.&quot;,
+                  &quot;Rainfall.mm.&quot;,
+                  &quot;Dew.point.temperature.C.&quot;,
+                  &quot;Snowfall..cm.&quot;))
 
 ## Printing column names and first 6 rows to show the end result of the data that has been cleaned.
 names(seoul_Bikes)</code></pre>
@@ -714,16 +723,17 @@ names(washington_Bikes)</code></pre>
 ##  [6] &quot;hr&quot;         &quot;holiday&quot;    &quot;weekday&quot;    &quot;workingday&quot; &quot;weathersit&quot;
 ## [11] &quot;temp&quot;       &quot;atemp&quot;      &quot;hum&quot;        &quot;windspeed&quot;  &quot;casual&quot;    
 ## [16] &quot;registered&quot; &quot;cnt&quot;</code></pre>
-<pre class="r"><code>washington_Bikes &lt;- washington_Bikes %&gt;%
-  select(-instant ,  ## &#39;-&#39; means remove the column from the selected data.
-         -yr ,
-         -mnth ,
-         -weekday ,
-         -workingday ,
-         -weathersit ,
-         -atemp ,
-         -casual ,
-         -registered )
+<pre class="r"><code>## Calling self-declared function to undertake given task 
+washington_Bikes &lt;- washington_Bikes %&gt;%
+  deleteColumn( c(&quot;instant&quot;,
+                  &quot;yr&quot;,
+                  &quot;mnth&quot;,
+                  &quot;weekday&quot;,
+                  &quot;workingday&quot;,
+                  &quot;weathersit&quot;,
+                  &quot;atemp&quot;,
+                  &quot;casual&quot;,
+                  &quot;registered&quot;))
 ## Columns in file after removing.
 names(washington_Bikes)</code></pre>
 <pre><code>## [1] &quot;dteday&quot;    &quot;season&quot;    &quot;hr&quot;        &quot;holiday&quot;   &quot;temp&quot;      &quot;hum&quot;      
@@ -794,8 +804,8 @@ head(washington_Bikes$Humidity)</code></pre>
 <p>Our fourth task is to convert the Temperature field’s values to degree celsius At the moment the field Temperature in the two files are given two different measurements, we will have both in percentage after this task. Temperature in Washington file is normalized.<br />
 </p>
 <ul>
-<li>Value is normalized which means formula [(value -Tmin)/Tmax-Tmin] was applied on it. [Tmin = -8, Tmax = 39]</li>
-<li>We have to reverse this fomrula which means we have to apply formula [(value)*(Tmax-Tmin)+Tmin] . [Tmin = -8, Tmax = 39]</li>
+<li>Value is normalized which means formula <span class="math inline">\([(value -Tmin)/Tmax-Tmin]\)</span> was applied on it. [Tmin = -8, Tmax = 39]</li>
+<li>We have to reverse this fomrula which means we have to apply formula $[(value)*(Tmax-Tmin)+Tmin] $. [Tmin = -8, Tmax = 39]</li>
 </ul>
 <strong>Implemantation idea</strong><br />
 Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
@@ -819,7 +829,7 @@ head(washington_Bikes$Temperature)</code></pre>
 </p>
 <ul>
 <li>First we need to conver WindSpeed to km/s, so we multiply by 69 because its divided by 69km/x</li>
-<li>After we apply the given formula “Wind (m/s) = 0.2777778 × Wind (km/h)” formula was found found from <a href="https://goodcalculators.com/wind-speed-converter/">goodcalculator.com</a></li>
+<li>After we apply the given formula <span class="math inline">\(&quot;Wind (m/s) = 0.2777778 × Wind (km/h)&quot;\)</span> formula was found found from <a href="https://goodcalculators.com/wind-speed-converter/">goodcalculator.com</a></li>
 </ul>
 <strong>Implemantation idea</strong><br />
 Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
