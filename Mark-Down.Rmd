@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 
-```{r}
-## Functions that will be used in the program miltuple times.
-## For deleting unwanted xolumns.
+```{r, include=FALSE}
+## Functions that will be used in the program miltiple times.
+## For deleting unwanted columns.
 deleteColumn <- function(dataFrame, columns){
   for (col in columns){
     dataFrame <- dataFrame %>%
@@ -31,15 +31,21 @@ convertDate <- function(dataFrame, formatDate){
 }
 
 ## For Creating new Column FullDate holding Date and Hour of the day.
+## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
 createFullDate <- function(dataFrame){
   dataFrame <- dataFrame %>%
   mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
                                   , month = as.integer(format(Date, format="%m"))
                                   ,day = as.integer(format(Date, format="%d"))
-                                  , hour = Hour , min = 0, sec = 0 ))
+                                  , hour = Hour 
+                                  ,min = 0
+                                  , sec = 0 ))
   return(dataFrame)
   
+
+  
 }
+
 ```
 
  \ <!-- chnage line symbol -->
@@ -69,6 +75,7 @@ The given techniques will be applied on the two CSV files data:
 ## Importing libraries needed to use specific functions commands.
 library(lubridate)
 library(tidyverse)
+library(plotly)
 ```
 
 ### Seoul, South Korea Data File beginning state
@@ -142,6 +149,7 @@ With the help of tidyverse function 'as_date()' we will change the type/class of
 ```{r}
 ## Printing class of column Date before mutation.
 class(seoul_Bikes$Date)
+
 seoul_Bikes <- seoul_Bikes %>%
   convertDate("dmy")
 ## Printing class of column Date after mutation.
@@ -149,7 +157,7 @@ class(seoul_Bikes$Date)
 ```
 <br><br />
 
-#### [TASK 4]]
+#### [TASK 4]
 <p>
 Our fourth task is to add a new column with name 'FullDate' which will hold the Date and Hour of the day the bike was rented in format 'Y-M-D H:M:S' \
 **Implemantation idea** \
@@ -158,7 +166,7 @@ With help of package lubridate we have a function called 'make_datetime' which d
 ```{r}
 ## Printing column names to show that FullDate does not exist.
 names(seoul_Bikes)
-## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+## Calling a self-declared function to undertake this task.
 seoul_Bikes <- seoul_Bikes %>%
   createFullDate()
 ## Printing column names to show creation of FullDate.
@@ -497,7 +505,7 @@ With help of package lubridate we have a function called 'make_datetime' which d
 ```{r}
 ## Printing column names to show that FullDate does not exist.
 names(washington_Bikes)
-## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+## Calling a self-declared function to apply this task.
 washington_Bikes <- washington_Bikes %>%
   createFullDate()
 
@@ -517,6 +525,347 @@ head(washington_Bikes)
 <br><br />
 
 ## DATA VISUALISATION :
+
+#### Air temperature variation over the course of a year
+<p>
+We will apply some visualisation and statistical analysis to compare the air temperature of both locations. \
+Due to my personal Laptop not being powerful enough i will be using only ggplot2 for the visualisation aspect rather than ggplotly. We will see both a point plot and boxplot for both different datasets.
+</p>
+```{r,fig.align='center', fig.height=8, fig.width=10}
+## aligns the plot/figure in the center
+## height/width gives size  in inches
+ggplot(seoul_Bikes) +
+  geom_point(aes(x = Date, y = Temperature), col="dark grey") +
+  stat_smooth(aes(x = Date, y = Temperature)) + ## To see the distribution density
+  xlab("Date") +  ## Naming x and y axes.
+  ylab("Air Temperature (degrees celsius)") +
+  ggtitle("Air Temperature variation of Seoul, Sount Korea") + ## Adding title to graph
+  theme(plot.title = element_text(hjust = 0.5)) ## To align the title of the graph in the center, code fourd on stackoverflow :" https://stackoverflow.com/questions/40675778/center-plot-title-in-ggplot2 "
+```
+<p>
+Using the point plot and a stat_smooth() we can view the Air Temperature's distribution density of how the air temperature varies in Seoul, South Korea. There is a variety of temperature's the warmest months are between may and august while the others get colder.
+</p>
+```{r}
+## The mean average of air temperature.
+seoul_Bikes %>% 
+  summarise(Mean=mean(Temperature))
+## The hottest day
+seoul_Bikes %>% 
+  summarise(Maximum=max(Temperature))
+## The coldest day.
+seoul_Bikes %>% 
+  summarise(Minimume=min(Temperature))
+```
+<p>
+It can reach very hot days up to nearly 40 degrees cesius, but it can also be very cold nearly -18 degrees celsius.
+</p>
+
+```{r,fig.align='center', fig.height=8, fig.width=10}
+ggplot(washington_Bikes) +
+  geom_point(aes(x = Date, y = Temperature), col = "orange") +
+  stat_smooth(aes(x = Date, y = Temperature)) + 
+  xlab("Date") + 
+  ylab("Air Temperature (degrees celsius)") +
+  ggtitle("Air Temperature variation of Washinghton,DC, America") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+Utilizing the point plot and a stat_smooth() we can view the Air Temperature's distribution density of how the air temperature varies in Washinghton, DC. There is a similar density as Seoul. We can see the curve going up and back down two times. This is because the data in Washinghton's is over two years rather than one year in Seou's data.
+</p>
+```{r}
+## The mean average of air temperature.
+washington_Bikes %>% 
+  summarise(Mean=mean(Temperature))
+## The hottest day
+washington_Bikes %>% 
+  summarise(Maximum=max(Temperature))
+## The coldest day.
+washington_Bikes %>% 
+  summarise(Minimume=min(Temperature))
+```
+<p>
+The average temperature in Washinghton is higher than Seoul. Both locations hotest days are close. But Seoul winter is a lot colder than Washinghton. We can see a difference of 10 degrees celsius.
+</p>
+
+#### Do seasons affect the average number of rented bikes?
+```{r,fig.align='center', fig.height=8, fig.width=8}
+ggplot(seoul_Bikes) +
+  geom_boxplot(aes(x = Season, y = Count), col = "dark grey") +
+  xlab("Season") + 
+  ylab("Number of bikes rented") +
+  ggtitle("Bikes Rented per Season in Seoul, South Korea") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+From the boxplot graph above we can observe there is a significant drop of bikes rented in the winter. The highest renting season is summer, although autumn and spring are not far behind. We can conclude that in Seoul, the bikes rented a day is depended on the season.
+</p>
+
+```{r, fig.align='center', fig.height=8, fig.width=8}
+ggplot(washington_Bikes) +
+  geom_boxplot(aes(x = Season, y = Count), col = "orange") +
+  xlab("Season") + 
+  ylab("Number of bikes rented") +
+  ggtitle("Bikes Rented per Season in Washinghton, DC, America") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+From the boxplot graph above we can observe there is a significant drop of bikes rented in the winter as well in Washington. The highest renting season is summer again, although autumn and spring are not far behind. We can conclude that for Washington, the bikes rented a day is depended on the season. \
+Both locations are have a dramatic fall of rented bikes in the winter. We can conclude that the number of bikes of rented is depended on the season.
+</p>
+
+#### Do holidays increase or decrease the demand for rented bikes?
+```{r,fig.align='center', fig.height=8, fig.width=10}
+ggplot(seoul_Bikes) +
+  geom_boxplot(aes(x = Holiday, y = Count), col = "dark grey") +
+  xlab("Holiday") + 
+  ylab("Number of bikes rented") +
+  ggtitle("Bikes Rented per Holiday in Seoul, South Korea") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r,fig.align='center', fig.height=8, fig.width=10}
+ggplot(washington_Bikes) +
+  geom_boxplot(aes(x = Holiday, y = Count), col = "orange") +
+  xlab("Holiday") + 
+  ylab("Number of bikes rented") +
+  ggtitle("Bikes Rented per Holiday in Washinghton DC, America") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+By observing the two above boxplot graphs, we can sum up that more bikes are rented when there is not a holiday. There is a bigger difference of the number of bikes rented in the Seoul dataset. We can see that when its not a holiday there is big difference to the number of rented bikes. While in the America dataset, the difference is smaller. \
+Maybe a variable that depends on holiday is that the residents need to work when there are no holidays. The way of trasnportation is by bike.
+
+</p>
+
+#### How does the time of day affect the demand for rented bikes?
+```{r, fig.align='center', fig.height=8, fig.width=10}
+grouped_seoul <- seoul_Bikes%>%
+   group_by(Hour) %>% ##Grouping data in groups per hour.
+   summarise(Average.Rented=mean(Count))  ## Finding average number of bikes rented per hour.
+
+ggplot(grouped_seoul,aes(x = Hour, y = Average.Rented, fill = Hour)) +
+  geom_bar(stat = "identity") +
+  labs(colour = "Hour of Day") +
+  xlab("Hour of Day") + 
+  ylab("Number of bikes rented") +
+  ggtitle("Average Bikes Rented per Hour in Seoul, South Korea") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+Using the bar graph we can view on average how busy each hour is in Seou. The graph is plotted using the average number of bikes rented per day. There is a big drop between 4-5 o'clock in the morning. There is a significant rise at 8 o' clock in the morning but falls again. We can view the demand of bikes start rising slowly slowly from 10 o' clock in the morning and richest the peak busiest hour at 18 o'clock. After that the demand starts dropping again. \
+Using the mean demand of rented bikes per hour, our conclusion is that the busiest hours of the day is 8 in the mornig and 17-19 in the afternoon. The busiest hour is at 18:00 afternoon. \
+</p>
+```{r,fig.align='center', fig.height=8, fig.width=10}
+grouped_wash <- washington_Bikes%>%
+   group_by(Hour) %>% ##Grouping data in groups per hour.
+   summarise(Average.Rented=mean(Count))  ## Finding average number of bikes rented per hour.
+
+ggplot(grouped_wash,aes(x = Hour, y = Average.Rented, fill = Hour)) +
+  geom_bar(stat = "identity") +
+  labs(colour = "Hour of Day") +
+  xlab("Hour of Day") + 
+  ylab("Number of bikes rented") +
+  ggtitle("Average Bikes Rented per Hour in Washinghton Dc, America") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+<p>
+Using the bar graph we can view on average how busy each hour is Washington. The graph is plotted using the average number of bikes rented per day. There is a big drop between 3-5 o'clock in the morning. There is a significant rise at 8 o' clock in the morning but falls again. We can view the demand of bikes start rising slowly slowly from 10 o' clock in the morning and richest the peak busiest hour at 17 o'clock and 18 o'clock. After that the demand starts dropping again.\
+Using the mean demand of rented bikes per hour, our conclusion is that the busiest hours of the day is 8 in the morning and 16-18 in the afternoon. The busiest hour is at 15:00 afternoon. \
+There is a similarity in both locations of the demand distribution by hour. This might be because at 8-9 in the morning the popultaion starts work and 17-18 the population finishes from work. This could also be a reason that there is more demand on bikes when its not holiday, since the citizents need to go to work. \
+</p>
+
+#### Is there an association between bike demand and the three meteorological variables (air temperature, wind speed and humidity)? 
+ \
+ 
+#### Seoul, South Korea
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(seoul_Bikes) +
+  geom_point(aes(x = Humidity, y = Temperature, size = Count, color = WindSpeed )) +
+  stat_smooth(aes(x = Humidity, y = Temperature)) + 
+  xlab("Humidity") + 
+  ylab("Temperature") +
+  ggtitle("Bikes rented based on the 3 meteorological variables, Seoul") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+The above point plot is using all three meteorological variables to examine if the demand of bikes rented is depended to them. By the color of each point we can understand that as the Wind Speed grows higher then 4 m/s the number of rented bikes decreases. Additionally using the x and t axes it is noticed when Temperature and Humidity is low or high the number of rented bikes are less. We dont know if this observation is due to the combination or just one of the variable. Below we will review graphs for each meteorological attribute.
+</p>
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(seoul_Bikes) +
+  geom_point(aes(x = Humidity, y = Count, size = Count) , col ="red") +
+  stat_smooth(aes(x = Humidity, y = Count), method = "lm", col = "black") +
+  stat_smooth(aes(x = Humidity, y = Count), col = "blue") +
+  xlab("Humidity out of %") + 
+  ylab("Number Rented Bikes") +
+  ggtitle("Bikes rented based on Humidity") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+The point plot above is showcasing the relationship between the number of bikes rented with the level of humidity. In the graph we have two lines that reveals the relationships.
+
+ * Black line: Is a linear model which is telling us that as Humidity increases so does the number of rented bikes.
+ * Blue line: Is a density distribution which is telling us that as humidity slowly increases so does the number of rented bikes, but when humidity starts going over 75% there drop in the number of bikes rented.
+ 
+When Humidity is between (25-75)% that is when the number of bikes rented are high.
+</p>
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(seoul_Bikes) +
+  geom_point(aes(x = WindSpeed, y = Count, size = Count) , col ="green") +
+  stat_smooth(aes(x = WindSpeed, y = Count), method = "lm", col = "black") +
+  stat_smooth(aes(x = WindSpeed, y = Count), col = "blue") +
+  xlab("WindSpeed m/s") + 
+  ylab("Number Rented Bikes") +
+  ggtitle("Bikes rented based on WindSpeed") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+The point plot above is showcasing the relationship between the number of bikes rented with the level of wind speed In the graph we have two lines that reveals the relationships.
+
+ * Black line: Is a linear model which is telling us that as wind speed increases the number of rented bike are decreasing.
+ * Blue line: Is a density distribution which is telling us that as wind speed slowly slowly increases the number  bikes rented are increasing, but when the wind speed exceeds 4m/s there is a large dramatic fall to the number of bikes rented.
+ 
+When wind speed is over 4m/s the number of bikes rented are limited.
+</p>
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(seoul_Bikes) +
+  geom_point(aes(x = Temperature, y = Count, size = Count) , col ="orange") +
+  stat_smooth(aes(x = Temperature, y = Count), method = "lm", col = "black") +
+  stat_smooth(aes(x = Temperature, y = Count), col = "blue") +
+  xlab("Temperature degrees Celsius") + 
+  ylab("Number Rented Bikes") +
+  ggtitle("Bikes rented based on Temperature") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+The point plot above is showcasing the relationship between the number of bikes rented with the level of temperature In the graph we have two lines that reveals the relationships.
+
+ * Black line: Is a linear model which is telling us that as Temperature becomes warmer the number of bikes rented are getting higher
+ * Blue line: Is a density distribution which is telling us that as the Temperature is getting warmer the number of bikes rented are increasing, but when temperature goes over 30 degrees celsius the number of bikes rented are becoming less.
+ 
+For very cold or hot Temperature's the number of rented bikes are less. 
+</p>
+<p>
+From the above graph we can accept that each meteorological variable affects the number of bikes rented. There is a big difference of number of bikes rented when the wind speed is very strong or when the temperature and humidity is very low or very high. \
+When the temperature is between 0-20 degrees celsius, humidity is between 25-75 % and wind speed is under 4m/s, the number bikes rented are there highest.
+</p>
+ \
+ 
+ #### Washington DC, America
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(washington_Bikes) +
+  geom_point(aes(x = Humidity, y = Temperature, size = Count, color = WindSpeed )) +
+  stat_smooth(aes(x = Humidity, y = Temperature)) + 
+  xlab("Humidity") + 
+  ylab("Temperature") +
+  ggtitle("Bikes rented based on the 3 meteorological variables, Washington DC") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+wash
+</p>
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(washington_Bikes) +
+  geom_point(aes(x = Humidity, y = Count, size = Count) , col ="red") +
+  stat_smooth(aes(x = Humidity, y = Count), method = "lm", col = "black") +
+  stat_smooth(aes(x = Humidity, y = Count), col = "blue") +
+  xlab("Humidity out of %") + 
+  ylab("Number Rented Bikes") +
+  ggtitle("Bikes rented based on Humidity") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+wash
+</p>
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(washington_Bikes) +
+  geom_point(aes(x = WindSpeed, y = Count, size = Count) , col ="green") +
+  stat_smooth(aes(x = WindSpeed, y = Count), method = "lm", col = "black") +
+  stat_smooth(aes(x = WindSpeed, y = Count), col = "blue") +
+  xlab("WindSpeed m/s") + 
+  ylab("Number Rented Bikes") +
+  ggtitle("Bikes rented based on WindSpeed") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+wash
+</p>
+```{r,fig.align='center', fig.height=10, fig.width=15}
+ggplot(washington_Bikes) +
+  geom_point(aes(x = Temperature, y = Count, size = Count) , col ="orange") +
+  stat_smooth(aes(x = Temperature, y = Count), method = "lm", col = "black") +
+  stat_smooth(aes(x = Temperature, y = Count), col = "blue") +
+  xlab("Temperature degrees Celsius") + 
+  ylab("Number Rented Bikes") +
+  ggtitle("Bikes rented based on Temperature") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+<p>
+wash
+</p>
+
+## STATISTICAL ANALYSIS :
+
+#### Linear Modelling Fitting
+
+#### Seoul, South Korea
+```{r}
+linear_model_log <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed, data = seoul_Bikes)
+summary(linear_model_log)
+```
+#### Washinghton DC, America
+```{r}
+linear_model_log <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed, data = washington_Bikes)
+summary(linear_model_log)
+```
+
+
+#### Confident Intervals on Linear Models.
+```{r, message=FALSE, fig.align='center', fig.height=8}
+confint(linear_model_log, 'Humidity', level=0.97)
+
+
+
+```
+
+
+
+
+
+
+```{r, message=FALSE, fig.align='center', fig.height=8}
+## aligns the plot/figure in the center
+## height/width gives size  in inches
+
+
+
+```
+
+
+
+
+
+```{r, message=FALSE, fig.align='center', fig.height=8}
+## aligns the plot/figure in the center
+## height/width gives size  in inches
+
+
+
+```
+
+
+
+
+
+```{r, message=FALSE, fig.align='center', fig.height=8}
+## aligns the plot/figure in the center
+## height/width gives size  in inches
+
+
+
+```
+
 
 
  \
