@@ -690,7 +690,7 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-The above point plot is using all three meteorological variables to examine if the demand of bikes rented is depended to them. By the color of each point we can understand that as the Wind Speed grows higher then 4 m/s the number of rented bikes decreases. Additionally using the x and t axes it is noticed when Temperature and Humidity is low or high the number of rented bikes are less. We dont know if this observation is due to the combination or just one of the variable. Below we will review graphs for each meteorological attribute.
+The above point plot is using all three meteorological variables to examine if the demand of bikes rented is depended to them. The size of the point reveals the number of bikes rented. The larger the point the more bikes were rented. When Temperature goes over ten we can see the number of bikes rented has incresed. By the color of each point we can understand that as the Wind Speed grows higher then 4 m/s the number of rented bikes decreases. Additionally using the x and y axes it is noticed when Temperature and Humidity is low or high the number of rented bikes are less. We dont know if this observation is due to the combination of all variables, or just by one of the variable. Below we will review graphs for each meteorological attribute.
 </p>
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(seoul_Bikes) +
@@ -708,7 +708,7 @@ The point plot above is showcasing the relationship between the number of bikes 
  * Black line: Is a linear model which is telling us that as Humidity increases so does the number of rented bikes.
  * Blue line: Is a density distribution which is telling us that as humidity slowly increases so does the number of rented bikes, but when humidity starts going over 75% there drop in the number of bikes rented.
  
-When Humidity is between (25-75)% that is when the number of bikes rented are high.
+When Humidity is between (25-75)% that is when the number of bikes rented are high. Additionally between the (25-75)% interval we have more records of rented bikes. This indicates days with such humidity were busier.
 </p>
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(seoul_Bikes) +
@@ -726,7 +726,7 @@ The point plot above is showcasing the relationship between the number of bikes 
  * Black line: Is a linear model which is telling us that as wind speed increases the number of rented bike are decreasing.
  * Blue line: Is a density distribution which is telling us that as wind speed slowly slowly increases the number  bikes rented are increasing, but when the wind speed exceeds 4m/s there is a large dramatic fall to the number of bikes rented.
  
-When wind speed is over 4m/s the number of bikes rented are limited.
+When wind speed is over 4m/s the number of bikes rented are limited. Records of rented bikes were limited also. The records are very few and influence the linear model. This is one of the reasons the linear model is on a rise.
 </p>
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(seoul_Bikes) +
@@ -744,10 +744,10 @@ The point plot above is showcasing the relationship between the number of bikes 
  * Black line: Is a linear model which is telling us that as Temperature becomes warmer the number of bikes rented are getting higher
  * Blue line: Is a density distribution which is telling us that as the Temperature is getting warmer the number of bikes rented are increasing, but when temperature goes over 30 degrees celsius the number of bikes rented are becoming less.
  
-For very cold or hot Temperature's the number of rented bikes are less. 
+For very cold or hot Temperature's the number of rented bikes are less. When temperature is between 10-30 degrees celcius, the records of rented bikes double as do the nnumber of bikes rented.
 </p>
 <p>
-From the above graph we can accept that each meteorological variable affects the number of bikes rented. There is a big difference of number of bikes rented when the wind speed is very strong or when the temperature and humidity is very low or very high. \
+From the above graphs we can accept that each meteorological variable affects the number of bikes rented. There is a big difference of number of bikes rented when the wind speed is very strong or when the temperature and humidity is very low or very high. \
 When the temperature is between 0-20 degrees celsius, humidity is between 25-75 % and wind speed is under 4m/s, the number bikes rented are there highest.
 </p>
  \
@@ -763,7 +763,7 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-wash
+The above point plot is using all three meteorological variables to examine if the demand of bikes rented is depended to them. The size of the point reveals the number of bikes rented. The larger the point the more bikes were rented. When Temperature goes over ten we can see the number of bikes rented have a small increase, not as big as in Seoul. By the color of each point we can understand that as the Wind Speed grows higher then 8-12 m/s the number of rented bikes decreases. The wind speed in America is more powerful. When the wind speed is at 4m/s the number of rented bikes are still high. Additionally using the x we can observe when Humidity is low there are limited records of rented bikes and the number of bikes rented is small. From the y axes we can see the relationship between the temperature and the number of rented bikes. Records of rented bikes are approximately the same between all the temperature values, but when temperature goes over 10 degrees celcius we can see the size of the points grow. This is to detail that the number of bikes rented are higher. We don't know if this observation is due to the combination of all variables, or just by one of the variable. Below we will review graphs for each meteorological attribute.
 </p>
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(washington_Bikes) +
@@ -776,7 +776,12 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-wash
+The point plot above is showcasing the relationship between the number of bikes rented with the level of humidity. In the graph we have two lines that reveals the relationships.
+
+ * Black line: Is a linear model which is telling us that as Humidity increases the number of bikes rented decreases. 
+ * Blue line: Is a density distribution which is telling us that as humidity slowly increases so does the number of rented bikes, but when humidity reaches 25 % the records and rented bikes start decreasing.
+ 
+When Humidity is between (0-25)% there as significant increase of rented bikes. But after 25% Humidity the records and number of bikes rented decrease in a very slow.
 </p>
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(washington_Bikes) +
@@ -789,7 +794,12 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-wash
+The point plot above is showcasing the relationship between the number of bikes rented with the level of wind speed In the graph we have two lines that reveals the relationships.
+
+ * Black line: Is a linear model which is telling us that as wind speed increases the number of rented bike are increase
+ * Blue line: Is a density distribution which is telling us that as wind speed slowly slowly increases the number  bikes rented are increasing, but when the wind speed exceeds 5-6m/s there is a change on the slope and the number of rented bikes start decreasing slowly.
+ 
+There is not a significant difference to the number of rented bikes after the 4m/s interval like Seoul. When wind speed exceeds 10 m/s thats when there is a big decrease in bike demand in america.
 </p>
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(washington_Bikes) +
@@ -802,8 +812,18 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-wash
+The point plot above is showcasing the relationship between the number of bikes rented with the level of temperature In the graph we have two lines that reveals the relationships.
+
+ * Black line: Is a linear model which is telling us that as Temperature becomes warmer the number of bikes rented are getting higher
+ * Blue line: Is a density distribution which is telling us that as the Temperature is getting warmer the number of bikes rented are increasing, but when temperature goes over 30 degrees celsius the number of bikes rented start decreasing.
+ 
+As temperature becomes warmer, the records and the number of rented bikes increase. When the temperature reaches 30 degrees celcius the slope changes direction and we can observe the number of rented bikes the number of records are becoming less. The coldest Temperature in Washington is approximately -7 degrees celsius while in Seoul is -17 degrees celsius. In Washington even if its cold bikes are still getting rented, on the other hand in Seoul cold temperature the number of bikes rented are limited.
 </p>
+<p>
+From the above graphs we can accept that each meteorological variable affects the number of bikes rented. There is a big difference of number of bikes rented when the wind speed is very strong or when the humidity is very low. As temperature increases so does the number of bikes rented. There isn't a big fall of bikes rented when considering Temperature for Washington. In the Seoul dataset Temperature was a big influence to the number of bikes rented. \
+In Washington the busiest weather conditions are Temperature is between 20-30 degrees celsius, wind speed is between 3-6 m/s and Humidity is between 25-75%.
+</p>
+ \
 
 ## STATISTICAL ANALYSIS :
 
@@ -811,90 +831,128 @@ wash
 
 #### Seoul, South Korea
 ```{r}
-linear_model_log <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed, data = seoul_Bikes)
-summary(linear_model_log)
+linear_model_log_seoul <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed,
+                             data = seoul_Bikes)
+summary(linear_model_log_seoul)
 ```
+<p>
+The summary gives us some explanation of the data and the influence of each variable has on the variable Count (Number of rented bikes). 
+ * Estimation column indicates the gradient value. If the gradient is positive, this means as response variable value increases when the explanatory variable increases. If the gradient is negative this means as the explanatory variable increases that the response variable decreases.
+ * From the above point, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
+ * Season "Spring" does not appear in the summary because it is a categorized variable. "Winter", "Autumn" and "Summer" are estimations from the "Spring" Value. Resulting to "Summer" having a gradient -0.0036038 from "Spring". 
+ * Our R-Squared value is approximately 0.5 that represents the dependency of each explanatory variable with the response. This means that 50% of the independent variables is  explains the response variable. This shows our variables are independent from each other. A value of 0.5 is not high but also not low, its a medium effect on each other.
+ * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Temperature, Humidity and Season are a big influence on the outcome of the data.
+</p>
+
 #### Washinghton DC, America
 ```{r}
-linear_model_log <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed, data = washington_Bikes)
-summary(linear_model_log)
+linear_model_log_wash <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed, 
+                            data = washington_Bikes)
+summary(linear_model_log_wash)
 ```
+<p>
+Now we will explain the summary data for Washington DC data.
+ * From the above point, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
+ * Season "Spring" does not appear in the summary because it is a categorized variable. "Winter", "Autumn" and "Summer" are estimations from the "Spring" Value. Resulting to "Summer" having a gradient -0.3651680 from "Spring". 
+  * Our R-Squared value is approximately 0.3 that represents the dependency of each explanatory variable with the response. This means that 30% of the independent variables is  explains the response variable. This shows our variables are independent from each other. A value of 0.3 is low measure, this means a lot of data are away from the slope.
+ * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Wind Speed is the biggest influence on the outcome of the data.
+</p>
+<p>
+We can see that in Seoul Wind Speed was not the biggest influence to the response variable while for Washington it is. Additionally winter in America is a lot busier and the number of rented bikes don't differ a lot from other seasons as they do in Seoul. \
+In both situations our R-Squared value is not high but low and medium. \
+</p>
 
 
-#### Confident Intervals on Linear Models.
+#### Confident Intervals on Linear Model 
+<p>
+We will examine the confidence interval of the data at 97%. \
+Our confidence intervals of 97% does not mean that future values will fall in between the lower and upper limit. It means that if we run 100 random tests 97 of the results will fall in the interval between lower and upper limit and 3 won't. \
+</p>
+
+###### Seoul, South Korea.
 ```{r, message=FALSE, fig.align='center', fig.height=8}
-confint(linear_model_log, 'Humidity', level=0.97)
-
-
-
+confint(linear_model_log_seoul, level = 0.97)
 ```
 
-
-
-
-
-
+###### Washinghton DC, America.
 ```{r, message=FALSE, fig.align='center', fig.height=8}
-## aligns the plot/figure in the center
-## height/width gives size  in inches
-
-
-
+confint(linear_model_log_wash, level = 0.97)
 ```
+<p>
+The confidence intervals are not the most reliable source in my opinion for the given situation. The reason is because we are dealing with variables controlled by weather. We cannot predict with little uncertainty what our weather conditions will be tomorrow or in a year. The weather changes really fast and is unpredictable. For this reason even we simulate such process we cannot know with 97% certainty the values will actually fall in those intervals. Our population parameters might look the same as our samples parameters but might also look very different due to the reason our conditions might actually be very different.
+</p>
 
-
-
-
-
+#### Predictions According to Linear Model on Seoul, South Korea.
+<p>
+We will use our linear model to predict future numbers. We first need to create the data we want our future data to represent. We will create a data.frame called predictData holding and representing the future values. We will use the predict() function to predict future data. For the interval argument will be using the value "prediction", this is because we are doing a prediction to get obtain values that are uncertain. We cannot predict future values with certainty since we don't know what might happen. A prediction interval widens the difference between the lower and upper value that the future data will fall in. In my opinion is a safer option because you plan for the worst. Using a confidence interval would have smaller ranges and it is more likely in the future the values wont fall in the interval computed. \ 
+Additionally our R-Squared value is low, this means that our explanatory variables do not explain our response variable  at the level we want. Since is under 0.7, our linear model is not very good.
+</p>
 ```{r, message=FALSE, fig.align='center', fig.height=8}
-## aligns the plot/figure in the center
-## height/width gives size  in inches
+## Need to create the data that we want our prediction to be based on 
+predictData <- data.frame(Season = "Winter", ##Assigning the data we want to make a prediction on.
+                          Temperature = 0.0,
+                          Humidity = 20.0,
+                          WindSpeed = 0.5)
 
-
-
+predict(linear_model_log_seoul, ##Creating the prediction based on the linear model. With level 90%
+        newdata = predictData,
+        level = 0.90,
+        interval = "prediction") ## Using "prediction" instead of "confidence" to have wider ranges since we are predicting data from random experiments.
 ```
-
-
-
-
-
+<p>
+After applying the prediction we can see the mean is 5.913404 and the values will range from 4.5512 to 7.275607 for variable Count when Season will be "Winter", Temperature will be 0 degrees celsius, Humidity will be up to 20% and Wind Speed will be 0.5 m/s
+</p>
+#### Predictions According to Linear Model Washinghton DC, America.
 ```{r, message=FALSE, fig.align='center', fig.height=8}
-## aligns the plot/figure in the center
-## height/width gives size  in inches
+predict(linear_model_log_wash,
+        newdata = predictData,
+        level = 0.90,
+        interval = "prediction")
+```
+<p>
+After applying the prediction we can see the mean is 4.276058 and the values will range from 2.19759 to 6.354526 for variable Count when Season will be "Winter", Temperature will be 0 degrees celsius, Humidity will be up to 20% and Wind Speed will be 0.5 m/s
+</p>
 
+<p>
+We have reached the end of the project. I will append in the end, a section called Appendix which will hold code of my self-created functions to undertake some of the processes in the Data Wrangling.
+</p>
 
+## APPENDIX 
+
+```{r, include=TRUE}
+## Functions that will be used in the program multiple times.
+## For deleting unwanted columns.
+deleteColumn <- function(dataFrame, columns){
+  for (col in columns){
+    dataFrame <- dataFrame %>%
+      select(-col) ## '-' notation means to select all except the given column.
+  }
+  return(dataFrame)
+}
+
+## For converting a column to class Date.
+## formatDate is used because for the conversion you need to specify in what format your date is in.
+## Using functions that tidyverse and lubridate offer.
+convertDate <- function(dataFrame, formatDate){
+  dataFrame <- dataFrame %>%
+    mutate(Date = (as_date(parse_date_time(Date,formatDate)))) 
+  return(dataFrame)
+}
+
+## For Creating new Column FullDate holding Date and Hour of the day.
+## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+createFullDate <- function(dataFrame){
+  dataFrame <- dataFrame %>%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
+                                  , month = as.integer(format(Date, format="%m"))
+                                  ,day = as.integer(format(Date, format="%d"))
+                                  , hour = Hour 
+                                  ,min = 0
+                                  , sec = 0 ))
+  return(dataFrame)
+  
+}
 
 ```
-
-
-
- \
- \
- \
- \
- \
- \
- \
- \
- \
- \
-
-Show a link [name you wany yo show](www.google.com)
-
-
-
-
-```{r, message=FALSE, fig.align='center', fig.height=8}
-## aligns the plot/figure in the center
-## height/width gives size  in inches
-
-
-
-```
-
-
-
-
-
 
 
