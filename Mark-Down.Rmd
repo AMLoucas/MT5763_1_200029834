@@ -40,9 +40,8 @@ createFullDate <- function(dataFrame){
                                   , hour = Hour 
                                   ,min = 0
                                   , sec = 0 ))
-  return(dataFrame)
-  
 
+  return(dataFrame)
   
 }
 
@@ -53,7 +52,7 @@ createFullDate <- function(dataFrame){
 ## INTRODUCTION :
 
 <p>
-The purpose of the individual project is to clean two data-sets which will later allow us to compare them and combine their data in a way where we will be able to obtain important information. In the project we are required to use version control system called 'git' and create a report using R Markdown.
+The purpose of the first individual project is to apply data analysis mechanisms on our two given datasets. These mechanisms will allow us to better understand what the data is representing and give us the opportunity to visualize the specific characteristics we are mostly interested in. In the project we are required to use a version control system and R Markdown. These two techniques offer the power of reproducible and is one the main principles program's should have. The version control system we will using for the assignment is 'Git'.
 </p>
 <p>
 During the process of the project we will be working with 2 specific data sets (CSV files.) 
@@ -61,16 +60,17 @@ During the process of the project we will be working with 2 specific data sets (
   * BikeSeoul.csv
   * BikeWashingtonDC.csv
   
-These two data sets contain the number of bikes rented at each hour in each of the continents/states. In the beginning the two given data sets are "messy"/not clean . In the project we will apply Data Wrangling to the data, resulting in having a "tidy"/clean data set. Once the files are in the correct format, we will create different plots to explore the relationships between rented bikes in  Washington, D.C., USA with Seoul, South Korea . We will also use the plots to examine if these numbers are determined by the weather conditions (Humidity, Temperature, Wind Speed). Once we visualize all these summaries, we will apply statistical analysis on the data to understand the relationship of the data even more and predict future outcomes. \
+These two data sets contain the number of bikes rented on specific dates and times in each of the continents/states. Additionally it also provides other variables that might influence the number of rented bikes. For example we are provided with the days Temperature, Wind Speed, Humidity and etc. These phenomena can impact the number of rented bikes in a good or bad way. \
+The two csv files beginning state is very messy, data is in different measure units and column names do not explain the attributes in a satisfactory way. To ensure our calculations, comparisons and understanding of the data is accurate we first need to apply a technique called Data Wrangling. By using this procedure our data will be updated in a "tidy"/clean state. \
+Once the csv files are in a neat state, we will start applying visualizing processes to explore the relationships between rented bikes in  Washington, DC (USA) with Seoul (South Korea). Additionally we will utilize the visualizing diagrams to examine the influence of each variable on the number of rented bikes. \
+Lastly, we will implement statistical analysis methods, which will be helpful for predictive purposes. In addition to prediction methods, we will be able to examine if the variables and the data is reliable to make future projections on.  \
 The given techniques will be applied on the two CSV files data:
 
   * Data Wrangling
-  * Data Visualisation
-  * Statistical modelling
+  * Data Visualization
+  * Statistical Modeling
   
 </p>
-
-## DATA WRANGLING :
 ```{r, echo=FALSE}
 ## Importing libraries needed to use specific functions commands.
 library(lubridate)
@@ -78,34 +78,39 @@ library(tidyverse)
 library(plotly)
 ```
 
+## DATA WRANGLING :
+
 ### Seoul, South Korea Data File beginning state
-```{r,}
+```{r}
 seoul_Bikes <- read.csv("BikeSeoul.csv")
-head(seoul_Bikes)
+head(seoul_Bikes, 4)
 ```
 
 <p>
-Above we can see the  beginning state of the file("BikeSeoul.csv"). We can notice that their are some issues with the Data Structure of the data set.
+Above we can see the  beginning state of the file("BikeSeoul.csv"). We can notice that their are some issues with the architecture of the provided data set.
   
   * Column names are too long [Rented.Bike.Count, Solar.Radiation..MJ.m2., ...]
-  * Unclear column names (too much notation that creates confusion) [Dew.point.temperature.C. ,]
+  * Unclear column names [Dew.point.temperature.C. ,]
   * Values are too long and take more time to code ['No Holiday']
+  * We cannot see it in the first 4 rows, but there are records that do not offer data. Some records had not bike rents and so empty cells or NA values are provided.
 
-These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract estimates.
+These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract the correct estimates needed.
 </p>
 <br><br />
 
 #### [TASK 1]
 <p>
-Our first task in our Data Wrangling is to remove all the rows that indicate a bike was not rented, after remove the column 'Functioning Day' which specifies this data. \
-**Implemantation idea** \
+
+ * Filter out observations for which no bike count data was collected, then remove the functioning day column as it is no longer required. \
+
+**Implementation idea** \
 Column 'Functioning Day' states if a bike was rented or not. We will have to filter through the rows and obtaining the records that have value "Yes" for attribute 'Functioning Day'. These are the records that a bike was rented. Once we have obtained these rows we can remove the column 'Functioning Day'.
 </p>
 ```{r}
 ## Number of rows before removing unneeded records are:
 nrow(seoul_Bikes)
 seoul_Bikes <- seoul_Bikes %>%
-  filter(Functioning.Day != "No") %>% ## Collect rows with value Yes in column Functioning.Day
+  filter(Functioning.Day != "No") %>% ## Filter out the rows with Functioning.Day equals "No"
   select(-Functioning.Day) ## Remove column Functioning.Day
 ## Number of rows after removing unneeded records are:
 nrow(seoul_Bikes)
@@ -114,8 +119,10 @@ nrow(seoul_Bikes)
 
 #### [TASK 2]
 <p>
-Our second task is to rename some column names to more appropriate ones. \
-From our first glimpse of the table we can notice that some column names do not have appropriate names.
+
+ * Where necessary, change the name of the columns to the appropriate ones given in Instructions. \
+
+From our first glimpse of the table we can notice that some column names do not have appropriate names. We need to covnert the following columns names.
 
   * 'Rented.Bike.Count' to 'Count'
   * 'Temperature.C.' to 'Temperature'
@@ -123,7 +130,7 @@ From our first glimpse of the table we can notice that some column names do not 
   * 'Seasons' to 'Season'
   * 'Humidity...' to 'Humidity'
 
-**Implemantation idea** \
+**Implementation idea** \
 Using function rename() from tidyverse we can simply rename the column names to more appropriate ones.
 </p>
 ```{r}
@@ -142,16 +149,19 @@ names(seoul_Bikes)
 
 #### [TASK 3] 
 <p>
-Our third task is to convert column Date from type 'character' to type to 'Date'. \
-**Implemantation idea** \
-With the help of tidyverse function 'as_date()' we will change the type/class of the attribute.
+ 
+ * Convert Date to a date object. \
+ 
+Column Date is a variable of type character ate the moment. \
+**Implementation idea** \
+With the help of tidyverse function 'as_date()' we will change the type/class of the attribute. The code has been created in a self-declared function.[The code for the function can be found in the Appendix which is placed in the end of the report.]
 </p>
 ```{r}
 ## Printing class of column Date before mutation.
 class(seoul_Bikes$Date)
 
 seoul_Bikes <- seoul_Bikes %>%
-  convertDate("dmy")
+  convertDate("dmy") ## Need to specify the format of the date in the cell before converting.
 ## Printing class of column Date after mutation.
 class(seoul_Bikes$Date)
 ```
@@ -159,9 +169,11 @@ class(seoul_Bikes$Date)
 
 #### [TASK 4]
 <p>
-Our fourth task is to add a new column with name 'FullDate' which will hold the Date and Hour of the day the bike was rented in format 'Y-M-D H:M:S' \
-**Implemantation idea** \
-With help of package lubridate we have a function called 'make_datetime' which does this action for us in the format asked.
+
+ * Create a new variable called FullDate which includes the hour in it (set minute and second to zero). For example, if Date = 2017-12-01 and Hour = 15, then FullDate = 2017-12-01 15:00:00 . \
+
+**Implementation idea** \
+With help of package lubridate we have a function called 'make_datetime' which does this action for us. It also converts it in the correct Date format that is being asked. Again the code is implemented in a self-declared function.[The code for the function can be found in the Appendix which is placed in the end of the report.]
 </p>
 ```{r}
 ## Printing column names to show that FullDate does not exist.
@@ -178,15 +190,15 @@ head(seoul_Bikes$FullDate)
 
 #### [TASK 5] 
 <p>
-Our fifth task is to change Holiday values:
-  
-  * 'No Holiday' to 'No'
-  * 'Holiday' to 'Yes'
+
+ * Change the factor levels of Holiday to Yes / No (use this order). \
+    + 'No Holiday' to 'No'
+    + 'Holiday' to 'Yes'
 
 Additionally to change the column type/class from 'character' to 'factor'. \
-The reason we want to apply this change is to be able order our data to the bikes rented during a holiday and the onces rented when it was not a holiday. Factor type allows us to categorize data. \
+The reason we want to apply this change is to be able order our data to the bikes rented during a holiday and the ones rented when it was not a holiday. Factor type allows us to categorize data. \
 **Implemantation idea** \
-Using tidyverse function mutate in combination with ifelse conditional statement we will change the record values. Once the inputs have changed we create it to factors/category with the order :
+Using tidyverse function mutate in combination with ifelse() conditional statement we will change the record values. Once the inputs have changed we create it to factors/category with the order :
 
   * Yes > No
 
@@ -208,16 +220,16 @@ class(seoul_Bikes$Holiday)
 
 #### [TASK 6] 
 <p>
-Our sixth task is to change the order of the Factor levels from column Season to the order:
 
-  * Spring
-  * Summer
-  * Autumn
-  * Winter
-
-From highest to lowest. \
-**Implemantation idea** \
-Using tidyverse 'mutate()' function, we will convert the column to a factor and specify the order of the levels we want.
+ * Change the order of the Season factor levels to:
+    + Spring
+    + Summer
+    + Autumn
+    + Winter
+    From highest to lowest. \
+    
+**Implementation idea** \
+Using tidyverse 'mutate()' function, we will convert the column to a factor and specify the order of the levels we want. Since the values are already "Spring", "Summer", "Autumn" and "Winter", their is not need to change them.
 </p>
 ```{r}
 ## Printing class of the column to show its not a factor yet.
@@ -231,7 +243,7 @@ head(seoul_Bikes$Season)
 
 #### [TASK 7]
 <p>
-Our seventh and final task for cleaning the first data set is to removing unwanted columns : 
+Remove the following columns: 
 
  * visibility
  * dew point temperature
@@ -239,8 +251,8 @@ Our seventh and final task for cleaning the first data set is to removing unwant
  * rainfall
  * snowfall
 
-**Implemantation idea** \
-Using tidyverse function 'select' and the notation of the '-' we will remove the unwanted columns
+**Implementation idea** \
+Using tidyverse function 'select' and the notation of the '-' we will remove the unwanted columns. I have used a self-declared function to undertake this process.[The code for the function can be found in the Appendix which is placed in the end of the report.]
 </p>
 ```{r}
 ## Printing the column names of the table before removing unwanted data.
@@ -257,14 +269,15 @@ seoul_Bikes <- seoul_Bikes %>%
 names(seoul_Bikes)
 ```
 <br><br />
-<p>
-After applying all these methods on the data set, we managed to clean the data and bring it to a 'tidy' state. Now the data is easier to read and manipulate in plotting and statistical analysis.
-</p>
+
 ###### The result of Seoul, South Korea Data File after Data Wrangling is : 
 ```{r,}
 head(seoul_Bikes)
 ```
 <br><br />
+<p>
+We have successfully Data Wrangled the first file(Seoul), now we need to apply Data Wrangling to the second file(Washington). The conventions which we will apply should bring the both files in a compatible format. Names of columns and measurements units must be the same, so we can compare the two data files.
+</p>
 
 ### Washington DC, USA Data File beginning state
 ```{r,}
@@ -272,12 +285,12 @@ washington_Bikes <- read.csv("BikeWashingtonDC.csv")
 head(washington_Bikes)
 ```
 <p>
-Above we can see the  beginning state of the file ("BikeWashingtonDC.csv"). We can notice that their are some issues with the Data Structure of the data set.
+Above we can see the  beginning state of the file ("BikeWashingtonDC.csv"). We can notice that their are some issues with the architecture of the provided data set.
   
-  * Column names are acronyms, users can distinguish differently [cnt, temp, atemp, hum, ...]
+  * Column names are acronyms, each user can interpret it differently [cnt, temp, atemp, hum, ...]
   * Values are not clear [Column season has values (1,2,3,4), which number represents which season?]
   * Some values are in binary values which not evryone understands [holiday, workingday]
-  * We have some kind of repeated data [dteday -> (yr,mnth,weekday)], [workingday is the same as holiday]
+  * We have some kind of repeated data [dteday -> (yr,mnth,weekday), workingday -> (holiday)]
 
 These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract estimates.
 </p>
@@ -285,20 +298,22 @@ These problems create clutter in the data and make it harder for us to understan
 
 #### [TASK 1]
 <p>
-Our first task in our Data Wrangling for the file ("BikeWashingtonDC.csv") is to remove all some columns that are unwanted and create repeatition in our data. \
 
-  * instant (unique number for each record)
-  * yr (year)
-  * mnth (month)
-  * weekday (day of the week)
-  * workingday (if the specific day was a holiday or not)
-  * weathersit (weather condition)
-  * atemp (normalized feeling temparature)
-  * casual (number of bikes rented by casul users)
-  * registered (number of bikes rented by registered users)
+ * Remove the following columns: unique record index, year, month, day of the week, working day, weather condition, normalised feeling temperature and number of bikes rented by casual and registered users
+(i.e. keep only the total count). \
+We will need to remove the following.
+    +instant (unique number for each record)
+    + yr (year)
+    + mnth (month)
+    + weekday (day of the week)
+    + workingday (if the specific day was a holiday or not)
+    + weathersit (weather condition)
+    + atemp (normalized feeling temparature)
+    + casual (number of bikes rented by casul users)
+    + registered (number of bikes rented by registered users)
   
-**Implemantation idea** \
-Using function select() form tidyverse package and the notation '-' we can select all the columns we want to remove.
+**Implementation idea** \
+Using function select() form tidyverse package and the notation '-' we can select all the columns we want to remove. Using the same self-declared function that was used in the first CSV file.
 </p>
 ```{r}
 ## Columns in the file before removing
@@ -321,18 +336,19 @@ names(washington_Bikes)
 
 #### [TASK 2]
 <p>
-Our second task is to rename the remaining to columns to match exactly as the seoul file. Making the columns names exactly the same will help with creating a combination of the two tables (join), so it has to be the same case aswell. \
 
- * 'dteday' to 'Date'
- * 'cnt' to 'Count'
- * 'hr' to 'Hour'
- * 'temp' to 'Temperature'
- * 'hum' to 'Humidity'
- * 'windspeed' to 'WindSpeed'
- * 'season' to 'Season'
- * 'holiday' to 'Holiday'
+ *Change the name of the columns to match the ones for Seoul. We need to change the following table :
+   + 'dteday' to 'Date'
+   + 'cnt' to 'Count'
+   + 'hr' to 'Hour'
+   + 'temp' to 'Temperature'
+   + 'hum' to 'Humidity'
+   + 'windspeed' to 'WindSpeed'
+   + 'season' to 'Season'
+   + 'holiday' to 'Holiday'
  
-**Implemantation idea** \
+The column names should have same case-sensitivity if we would like to join them later. \
+**Implementation idea** \
 Using function rename() form tidyverse package we can rename the already existing column names.
 </p>
 ```{r}
@@ -355,11 +371,10 @@ names(washington_Bikes)
 
 #### [TASK 3]
 <p>
-Our third task is to convert the Humidity field's values to a percentage. At the moment the field Humidity in the two files are given two different measurements, we will have both in percentage after this task. \
-
- * Value is divided by 100 at the moment, so we will need to multiply it by 100 to get it to a % value.
+ * Convert Humidity to a %. We need to have the measure units same across both data frames.
+    + Value is divided by 100 at the moment, so we will need to multiply it by 100 to get it to a % value.
   
-**Implemantation idea** \
+**Implementation idea** \
 Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
 </p>
 ```{r}
@@ -374,13 +389,12 @@ head(washington_Bikes$Humidity)
 
 #### [TASK 4]
 <p>
-Our fourth task is to convert the Temperature field's values to degree celsius At the moment the field Temperature in the two files are given two different measurements, we will have both in percentage after this task. Temperature in Washington file is normalized. \
-
- * Value is normalized which means formula $[(value -Tmin)/Tmax-Tmin]$ was applied on it. [Tmin = -8, Tmax = 39]
- * We have to reverse this fomrula which means we have to apply formula $[(value)*(Tmax-Tmin)+Tmin] $. [Tmin = -8, Tmax = 39]
+ * Convert Temperature to degrees Celsius. \
+   + Value is normalized which means formula $[(value -Tmin)/Tmax-Tmin]$ was applied on it. $[Tmin = -8, Tmax = 39]$
+   + We have to reverse this formula which means we have to apply formula $[(value)*(Tmax-Tmin)+Tmin]$ . $[Tmin = -8, Tmax = 39]$
 
 **Implemantation idea** \
-Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
+Using function mutate() from tidyverse package we can modify the existing column and its fields.
 </p>
 ```{r}
 ## Printing first 6 rows to show the value are now normalized.
@@ -397,13 +411,12 @@ head(washington_Bikes$Temperature)
 
 #### [TASK 5]
 <p>
-Our fifth task is to convert the WindSpeed field's values to m/s At the moment the field WindSpeed in the two files are given two different measurements, we will have both in percentage after this task. WindSpeed fieald in washinghton file is divided by 69km/s while in the Seoul file is in m/s \
-
-  * First we need to conver WindSpeed to km/s, so we multiply by 69 because its divided by 69km/x
-  * After we apply the given formula $"Wind (m/s) = 0.2777778 × Wind (km/h)"$ formula was found found from [goodcalculator.com](https://goodcalculators.com/wind-speed-converter/)
+ * Convert WindSpeed to m/s. At the moment WindSpeed is in 69km/s \
+    + First we need to convert WindSpeed to km/s, so we multiply by 69 because its divided by $69km/s$
+    + After we apply the given formula $Wind (m/s) = 0.2777778 × Wind (km/h)$ , formula was found found from [goodcalculator.com](https://goodcalculators.com/wind-speed-converter/)
   
-**Implemantation idea** \
-Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
+**Implementation idea** \
+Using function mutate() from tidyverse package we can modify the existing column and its fields.
 </p>
 ```{r}
 ## Printing first 6 rows to show the value are in (km/s)/69
@@ -419,19 +432,16 @@ head(washington_Bikes$WindSpeed)
 
 #### [TASK 6]
 <p>
-Our sixth task is to change the values of field season. After convert the class to a factor and give the factor levels a specific order. \
+ * Change the factor levels of Season to Spring, Summer, Autumn and Winter (in this order to match Seoul’s one). We also need to change the values of the Seasons. In this file they are valued with integers. We need to convert values :=
+   + '1' to 'Winter'
+   + '2' to 'Spring'
+   + '3' to 'Summer'
+   + '4' to 'Autumn'
+   In the order:
+      - Spring > Summer > Autumn > Winter 
  
- * '1' to 'Winter'
- * '2' to 'Spring'
- * '3' to 'Summer'
- * '4' to 'Autumn'
- 
-The order the levels must follow are:
-
- * Spring > Summer > Autumn > Winter 
- 
-**Implemantation idea** \
-Using function mutate() form tidyverse package and ifelse conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field  to a factor.
+**Implementation idea** \
+Using function mutate() form tidyverse package and ifelse() conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field to a factor.
 </p>
 ```{r}
 ## Printing the 6 fist rows to show factor values before changing
@@ -454,13 +464,14 @@ class(washington_Bikes$Season)
 
 #### [TASK 7]
 <p>
-Our seventh task is to convert the Holiday values to Yes or No. After we need to convert the type to  factor, so the data can be categorzied. \
-  
-  * 0 to 'No'
-  * 1 to 'Yes'
+ * Change the factor levels of Holiday to Yes / No (use this order). \
+    + 0 to 'No'
+    + 1 to 'Yes'
+    In order :
+        - Yes > No
 
-**Implemantation idea** \
-Using function mutate() form tidyverse package and ifelse conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field  to a factor.
+**Implementation idea** \
+Using function mutate() form tidyverse package and ifelse() conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field  to a factor.
 </p>
 ```{r}
 ## Printing the 6 fist rows to show factor values before changing
@@ -479,9 +490,9 @@ class(washington_Bikes$Holiday)
 
 #### [TASK 8]
 <p>
-Our eight task is to convert the class of field Date from 'character' to 'Date'. \
+ * Convert Date to a date object. \
 
-**Implemantation idea** \
+**Implementation idea** \
 With the help of tidyverse function 'as_date()' we will change the type/class of the attribute to date.
 </p>
 ```{r}
@@ -498,9 +509,10 @@ class(washington_Bikes$Date)
 
 #### [TASK 9]
 <p>
-Our ninth task is to add a new column with name 'FullDate' which will hold the Date and Hour of the day the bike was rented, in format 'Y-M-D H:M:S' \
-**Implemantation idea** \
-With help of package lubridate we have a function called 'make_datetime' which does this action for us in the format asked.
+ * Create a new variable called FullDate which includes the hour in it (set minute and second to zero). For example, if Date = 2017-12-01 and Hour = 15, then FullDate = 2017-12-01 15:00:00 \
+ 
+**Implementation idea** \
+With help of package lubridate we have a function called 'make_datetime' which does this action for us in the format asked. Using the same self-declared function that was used in the first CSV file.
 </p>
 ```{r}
 ## Printing column names to show that FullDate does not exist.
@@ -515,22 +527,28 @@ names(washington_Bikes)
 head(washington_Bikes$FullDate)
 ```
 <br><br />
-<p>
-After applying all these methods on the data set, we managed to clean the data and bring it to a 'tidy' state. Now the data is easier to read and manipulate in plotting and statistical analysis. Additionally the data is now in the same state as Seoul file which will allow us to join/combile the data sets and explore different relationships
-</p>
+
 ###### The result of Seoul, South Korea Data File after Data Wrangling is : 
 ```{r,}
 head(washington_Bikes)
 ```
 <br><br />
+<p>
+We have successfully Data Wrangled the second file (Washington). Now our two files are compatible with each other. Sharing same column names and measure units are the same for each column. \
+We will now proceed to the data visualization tasks.
+</p>
 
 ## DATA VISUALISATION :
+<p>
+Using package ggplot2 we can create different plots and visualize characteristics of our data. In this section of the project we will manipulate the ggplot2 library and compute different plots to examine hypothesis. Data can be more understandable when its visualized rather than reading a spreadsheets with numbers. An image can be worth a 1000 words.
+</p>
 
 #### Air temperature variation over the course of a year
 <p>
-We will apply some visualisation and statistical analysis to compare the air temperature of both locations. \
-Due to my personal Laptop not being powerful enough i will be using only ggplot2 for the visualisation aspect rather than ggplotly. We will see both a point plot and boxplot for both different datasets.
+We will input the different temperature measurements that was collected in the data files. Using the date and temperature of a record, we will be able to view how the temperature varied across the year in the two different locations.
 </p>
+
+###### Seoul, South Korea
 ```{r,fig.align='center', fig.height=8, fig.width=10}
 ## aligns the plot/figure in the center
 ## height/width gives size  in inches
@@ -543,7 +561,7 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5)) ## To align the title of the graph in the center, code fourd on stackoverflow :" https://stackoverflow.com/questions/40675778/center-plot-title-in-ggplot2 "
 ```
 <p>
-Using the point plot and a stat_smooth() we can view the Air Temperature's distribution density of how the air temperature varies in Seoul, South Korea. There is a variety of temperature's the warmest months are between may and august while the others get colder.
+Using the point plot and a stat_smooth() we can view the Air Temperature's distribution density of how the air temperature varies in Seoul, South Korea. There is a variety of temperature's the warmest months are between may and august. The coldest temperatures where collected in winter.
 </p>
 ```{r}
 ## The mean average of air temperature.
@@ -560,6 +578,7 @@ seoul_Bikes %>%
 It can reach very hot days up to nearly 40 degrees cesius, but it can also be very cold nearly -18 degrees celsius.
 </p>
 
+###### Washington DC, USA
 ```{r,fig.align='center', fig.height=8, fig.width=10}
 ggplot(washington_Bikes) +
   geom_point(aes(x = Date, y = Temperature), col = "orange") +
@@ -570,7 +589,7 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-Utilizing the point plot and a stat_smooth() we can view the Air Temperature's distribution density of how the air temperature varies in Washinghton, DC. There is a similar density as Seoul. We can see the curve going up and back down two times. This is because the data in Washinghton's is over two years rather than one year in Seou's data.
+Utilizing the point plot and a stat_smooth() we can view the Air Temperature's distribution density of Washington, DC. There is a similar density as Seoul. We can see the curve going up and back down two times. This is because the data in Washington's is over two years rather than one year.
 </p>
 ```{r}
 ## The mean average of air temperature.
@@ -584,10 +603,12 @@ washington_Bikes %>%
   summarise(Minimume=min(Temperature))
 ```
 <p>
-The average temperature in Washinghton is higher than Seoul. Both locations hotest days are close. But Seoul winter is a lot colder than Washinghton. We can see a difference of 10 degrees celsius.
+The average temperature in Washington is higher than Seoul. Both locations hotest days are close. But Seoul winter is a lot colder than Washington. We can see a difference of 10 degrees celsius.
 </p>
 
 #### Do seasons affect the average number of rented bikes?
+
+###### Seoul, South Korea
 ```{r,fig.align='center', fig.height=8, fig.width=8}
 ggplot(seoul_Bikes) +
   geom_boxplot(aes(x = Season, y = Count), col = "dark grey") +
@@ -597,9 +618,10 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-From the boxplot graph above we can observe there is a significant drop of bikes rented in the winter. The highest renting season is summer, although autumn and spring are not far behind. We can conclude that in Seoul, the bikes rented a day is depended on the season.
+From the boxplot graph above we can observe there is a significant drop of bikes rented in the winter. The highest renting season is summer, although autumn and spring are not far behind. We can conclude that in Seoul, that Season influences the number of bikes rented.
 </p>
 
+###### Washington DC, USA
 ```{r, fig.align='center', fig.height=8, fig.width=8}
 ggplot(washington_Bikes) +
   geom_boxplot(aes(x = Season, y = Count), col = "orange") +
@@ -609,11 +631,13 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-From the boxplot graph above we can observe there is a significant drop of bikes rented in the winter as well in Washington. The highest renting season is summer again, although autumn and spring are not far behind. We can conclude that for Washington, the bikes rented a day is depended on the season. \
-Both locations are have a dramatic fall of rented bikes in the winter. We can conclude that the number of bikes of rented is depended on the season.
+From the boxplot graph above we can observe there is a drop of bikes rented in the winter as well in Washington. The highest renting season is summer again, although autumn and spring are not far behind.  We can conclude that in Washington, that Season influences the number of bikes rented. \
+Both locations are have a decrease of rented bikes in the winter. For Washington the drop of number of bikes rented is smaller, this might be because Seoul winter is 10 degrees celsius colder.
 </p>
 
 #### Do holidays increase or decrease the demand for rented bikes?
+
+###### Seoul, South Korea
 ```{r,fig.align='center', fig.height=8, fig.width=10}
 ggplot(seoul_Bikes) +
   geom_boxplot(aes(x = Holiday, y = Count), col = "dark grey") +
@@ -623,6 +647,7 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
+###### Washington DC, USA
 ```{r,fig.align='center', fig.height=8, fig.width=10}
 ggplot(washington_Bikes) +
   geom_boxplot(aes(x = Holiday, y = Count), col = "orange") +
@@ -632,12 +657,18 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-By observing the two above boxplot graphs, we can sum up that more bikes are rented when there is not a holiday. There is a bigger difference of the number of bikes rented in the Seoul dataset. We can see that when its not a holiday there is big difference to the number of rented bikes. While in the America dataset, the difference is smaller. \
-Maybe a variable that depends on holiday is that the residents need to work when there are no holidays. The way of trasnportation is by bike.
+By observing the two above boxplot graphs, we can sum up that more bikes are rented when there is not a holiday. There is a bigger difference of the number of bikes rented in the Seoul dataset. We can see that when its not a holiday there is a big drop to the number of rented bikes. While in the America dataset, the difference is smaller. \
+Maybe a variable that depends on holiday is that the residents need to work. When it is a holiday the population is home resting, while if its a working day(not a holiday) the population needs transportation to attend work and a bike is one way of transportation.
 
 </p>
 
 #### How does the time of day affect the demand for rented bikes?
+
+<p>
+Before inputting the data in the bar graph. I grouped all the number of rented bikes for each location by the hour it was rented. After i calculated the mean average of the number of rented bikes for each hour. Later this data was inputted in the bar graph. The bar graphs is describing the average number of bikes rented per different hour.
+</p>
+
+###### Seoul, South Korea
 ```{r, fig.align='center', fig.height=8, fig.width=10}
 grouped_seoul <- seoul_Bikes%>%
    group_by(Hour) %>% ##Grouping data in groups per hour.
@@ -652,9 +683,11 @@ ggplot(grouped_seoul,aes(x = Hour, y = Average.Rented, fill = Hour)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-Using the bar graph we can view on average how busy each hour is in Seou. The graph is plotted using the average number of bikes rented per day. There is a big drop between 4-5 o'clock in the morning. There is a significant rise at 8 o' clock in the morning but falls again. We can view the demand of bikes start rising slowly slowly from 10 o' clock in the morning and richest the peak busiest hour at 18 o'clock. After that the demand starts dropping again. \
-Using the mean demand of rented bikes per hour, our conclusion is that the busiest hours of the day is 8 in the mornig and 17-19 in the afternoon. The busiest hour is at 18:00 afternoon. \
+Using the bar graph we can view on average how busy each hour is in Seoul. The graph is plotted using the average number of bikes rented per hour There is a big drop between 4-5 o'clock in the morning. There is a significant rise at 8 o' clock in the morning but falls again. We can view the demand of bikes start rising slowly slowly from 10 o' clock in the morning and richest the peak (busiest hour) at 18 o'clock. After that the demand starts dropping again. \
+Using the mean demand of rented bikes per hour, our conclusion is that the busiest hours of the day is 8 in the morning and 17-19 in the afternoon. The busiest hour is at 18:00 afternoon. \
 </p>
+
+###### Washington DC, USA
 ```{r,fig.align='center', fig.height=8, fig.width=10}
 grouped_wash <- washington_Bikes%>%
    group_by(Hour) %>% ##Grouping data in groups per hour.
@@ -673,7 +706,7 @@ ggplot(grouped_wash,aes(x = Hour, y = Average.Rented, fill = Hour)) +
 <p>
 Using the bar graph we can view on average how busy each hour is Washington. The graph is plotted using the average number of bikes rented per day. There is a big drop between 3-5 o'clock in the morning. There is a significant rise at 8 o' clock in the morning but falls again. We can view the demand of bikes start rising slowly slowly from 10 o' clock in the morning and richest the peak busiest hour at 17 o'clock and 18 o'clock. After that the demand starts dropping again.\
 Using the mean demand of rented bikes per hour, our conclusion is that the busiest hours of the day is 8 in the morning and 16-18 in the afternoon. The busiest hour is at 15:00 afternoon. \
-There is a similarity in both locations of the demand distribution by hour. This might be because at 8-9 in the morning the popultaion starts work and 17-18 the population finishes from work. This could also be a reason that there is more demand on bikes when its not holiday, since the citizents need to go to work. \
+There is a similarity in both locations of the demand distribution by hour. This might be because at 8-9 in the morning the population starts work and 17-18 the employees finish work. This could also be a reason that there is more demand on rented bikes between those hours. \
 </p>
 
 #### Is there an association between bike demand and the three meteorological variables (air temperature, wind speed and humidity)? 
@@ -690,8 +723,10 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-The above point plot is using all three meteorological variables to examine if the demand of bikes rented is depended to them. The size of the point reveals the number of bikes rented. The larger the point the more bikes were rented. When Temperature goes over ten we can see the number of bikes rented has incresed. By the color of each point we can understand that as the Wind Speed grows higher then 4 m/s the number of rented bikes decreases. Additionally using the x and y axes it is noticed when Temperature and Humidity is low or high the number of rented bikes are less. We dont know if this observation is due to the combination of all variables, or just by one of the variable. Below we will review graphs for each meteorological attribute.
+The above point plot is using all three meteorological variables to examine if the nuber of bikes rented are influenced by them. The size of the point reveals the number of bikes rented. The larger the point the more bikes were rented. When Temperature goes over ten we can see the number of bikes rented has increased. The color of each points describes how powerful the wind speed is. By the color of each point we can understand that as the Wind Speed grows higher then 4 m/s the number of rented bikes decreases. Additionally using the x and y axes it is noticed when Temperature and Humidity is low or high the number of rented bikes are less. We don't know if this observation is due to the combination of all variables, or just by one of the variable. Below we will review graphs for each meteorological attribute.
 </p>
+
+#### Humidity
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(seoul_Bikes) +
   geom_point(aes(x = Humidity, y = Count, size = Count) , col ="red") +
@@ -710,6 +745,8 @@ The point plot above is showcasing the relationship between the number of bikes 
  
 When Humidity is between (25-75)% that is when the number of bikes rented are high. Additionally between the (25-75)% interval we have more records of rented bikes. This indicates days with such humidity were busier.
 </p>
+
+#### Wind Speed
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(seoul_Bikes) +
   geom_point(aes(x = WindSpeed, y = Count, size = Count) , col ="green") +
@@ -721,13 +758,15 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-The point plot above is showcasing the relationship between the number of bikes rented with the level of wind speed In the graph we have two lines that reveals the relationships.
+The point plot above is showcasing the relationship between the number of bikes rented with the level of wind speed. In the graph we have two lines that reveals the relationships.
 
- * Black line: Is a linear model which is telling us that as wind speed increases the number of rented bike are decreasing.
- * Blue line: Is a density distribution which is telling us that as wind speed slowly slowly increases the number  bikes rented are increasing, but when the wind speed exceeds 4m/s there is a large dramatic fall to the number of bikes rented.
+ * Black line: Is a linear model which is telling us that as wind speed increases, the number of rented bike are decreasing.
+ * Blue line: Is a density distribution which is telling us that as wind speed slowly slowly increases the number bikes rented are increasing, but when the wind speed exceeds 4m/s there is a dramatic fall to the number of bikes rented.
  
 When wind speed is over 4m/s the number of bikes rented are limited. Records of rented bikes were limited also. The records are very few and influence the linear model. This is one of the reasons the linear model is on a rise.
 </p>
+
+#### Temperature
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(seoul_Bikes) +
   geom_point(aes(x = Temperature, y = Count, size = Count) , col ="orange") +
@@ -739,16 +778,16 @@ ggplot(seoul_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-The point plot above is showcasing the relationship between the number of bikes rented with the level of temperature In the graph we have two lines that reveals the relationships.
+The point plot above is showcasing the relationship between the number of bikes rented with the level of temperature. In the graph we have two lines that reveals the relationships.
 
- * Black line: Is a linear model which is telling us that as Temperature becomes warmer the number of bikes rented are getting higher
+ * Black line: Is a linear model which is telling us that as Temperature becomes warmer, the number of bikes rented are getting higher.
  * Blue line: Is a density distribution which is telling us that as the Temperature is getting warmer the number of bikes rented are increasing, but when temperature goes over 30 degrees celsius the number of bikes rented are becoming less.
  
-For very cold or hot Temperature's the number of rented bikes are less. When temperature is between 10-30 degrees celcius, the records of rented bikes double as do the nnumber of bikes rented.
+For very cold or hot Temperature's the number of rented bikes are less. When temperature is between 10-30 degrees celcius, the records of rented bikes double as do the number of bikes rented.
 </p>
 <p>
 From the above graphs we can accept that each meteorological variable affects the number of bikes rented. There is a big difference of number of bikes rented when the wind speed is very strong or when the temperature and humidity is very low or very high. \
-When the temperature is between 0-20 degrees celsius, humidity is between 25-75 % and wind speed is under 4m/s, the number bikes rented are there highest.
+When the temperature is between 0-20 degrees celsius, humidity is between 25-75 % and wind speed is under 4m/s, the number bikes rented are at there highest.
 </p>
  \
  
@@ -763,8 +802,10 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-The above point plot is using all three meteorological variables to examine if the demand of bikes rented is depended to them. The size of the point reveals the number of bikes rented. The larger the point the more bikes were rented. When Temperature goes over ten we can see the number of bikes rented have a small increase, not as big as in Seoul. By the color of each point we can understand that as the Wind Speed grows higher then 8-12 m/s the number of rented bikes decreases. The wind speed in America is more powerful. When the wind speed is at 4m/s the number of rented bikes are still high. Additionally using the x we can observe when Humidity is low there are limited records of rented bikes and the number of bikes rented is small. From the y axes we can see the relationship between the temperature and the number of rented bikes. Records of rented bikes are approximately the same between all the temperature values, but when temperature goes over 10 degrees celcius we can see the size of the points grow. This is to detail that the number of bikes rented are higher. We don't know if this observation is due to the combination of all variables, or just by one of the variable. Below we will review graphs for each meteorological attribute.
+The above point plot is using all three meteorological variables to examine if the demand of bikes rented are influenced by them. The size of the point reveals the number of bikes rented. The larger the point, the more bikes were rented. When Temperature goes over ten we can see the number of bikes rented have a small increase, not as big as in Seoul. The color of each points describes how powerful the wind speed is. By the color of each point we can understand that as the Wind Speed grows higher then 8-12 m/s the number of rented bikes decreases. The wind speed in America is more powerful. When the wind speed is at 4m/s the number of rented bikes are still high. Additionally using the x we can observe when Humidity is low there are limited records of rented bikes and the number of bikes rented is small. From the y axes we can see the relationship between the temperature and the number of rented bikes. Records of rented bikes are approximately the same between at all the temperature values, but when temperature goes over 10 degrees celcius we can see the size of the points grow. This is to detail that the number of bikes rented are higher. We don't know if this observation is due to the combination of all variables, or just by one of the variable. Below we will review graphs for each meteorological attribute.
 </p>
+
+#### Humidity
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(washington_Bikes) +
   geom_point(aes(x = Humidity, y = Count, size = Count) , col ="red") +
@@ -779,10 +820,12 @@ ggplot(washington_Bikes) +
 The point plot above is showcasing the relationship between the number of bikes rented with the level of humidity. In the graph we have two lines that reveals the relationships.
 
  * Black line: Is a linear model which is telling us that as Humidity increases the number of bikes rented decreases. 
- * Blue line: Is a density distribution which is telling us that as humidity slowly increases so does the number of rented bikes, but when humidity reaches 25 % the records and rented bikes start decreasing.
+ * Blue line: Is a density distribution which is telling us that as humidity slowly increases so does the number of rented bikes, but when humidity reaches 25 % the number of rented bikes start decreasing.
  
 When Humidity is between (0-25)% there as significant increase of rented bikes. But after 25% Humidity the records and number of bikes rented decrease in a very slow.
 </p>
+
+#### Wind Speed
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(washington_Bikes) +
   geom_point(aes(x = WindSpeed, y = Count, size = Count) , col ="green") +
@@ -796,11 +839,13 @@ ggplot(washington_Bikes) +
 <p>
 The point plot above is showcasing the relationship between the number of bikes rented with the level of wind speed In the graph we have two lines that reveals the relationships.
 
- * Black line: Is a linear model which is telling us that as wind speed increases the number of rented bike are increase
+ * Black line: Is a linear model which is telling us that as wind speed increases the number of rented bike are increase.
  * Blue line: Is a density distribution which is telling us that as wind speed slowly slowly increases the number  bikes rented are increasing, but when the wind speed exceeds 5-6m/s there is a change on the slope and the number of rented bikes start decreasing slowly.
  
-There is not a significant difference to the number of rented bikes after the 4m/s interval like Seoul. When wind speed exceeds 10 m/s thats when there is a big decrease in bike demand in america.
+There is not a significant difference to the number of rented bikes after the 4m/s interval like Seoul. When wind speed exceeds 10 m/s that is when there is a big decrease in bike demand in Washington.
 </p>
+
+#### Temperature
 ```{r,fig.align='center', fig.height=10, fig.width=15}
 ggplot(washington_Bikes) +
   geom_point(aes(x = Temperature, y = Count, size = Count) , col ="orange") +
@@ -812,20 +857,19 @@ ggplot(washington_Bikes) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 <p>
-The point plot above is showcasing the relationship between the number of bikes rented with the level of temperature In the graph we have two lines that reveals the relationships.
+The point plot above is showcasing the relationship between the number of bikes rented with the level of temperature. In the graph we have two lines that reveals the relationships.
 
- * Black line: Is a linear model which is telling us that as Temperature becomes warmer the number of bikes rented are getting higher
+ * Black line: Is a linear model which is telling us that as Temperature becomes warmer the number of bikes rented are getting higher.
  * Blue line: Is a density distribution which is telling us that as the Temperature is getting warmer the number of bikes rented are increasing, but when temperature goes over 30 degrees celsius the number of bikes rented start decreasing.
  
-As temperature becomes warmer, the records and the number of rented bikes increase. When the temperature reaches 30 degrees celcius the slope changes direction and we can observe the number of rented bikes the number of records are becoming less. The coldest Temperature in Washington is approximately -7 degrees celsius while in Seoul is -17 degrees celsius. In Washington even if its cold bikes are still getting rented, on the other hand in Seoul cold temperature the number of bikes rented are limited.
+As temperature becomes warmer, the records and the number of rented bikes increase. When the temperature reaches 30 degrees celcius the slope changes direction and we can observe the number of rented bikes is getting smaller. The coldest Temperature in Washington is approximately -7 degrees celsius while in Seoul is -17 degrees celsius. In Washington even if its cold bikes are still getting rented, on the other hand in Seoul's cold temperature the number of bikes rented are limited.
 </p>
 <p>
 From the above graphs we can accept that each meteorological variable affects the number of bikes rented. There is a big difference of number of bikes rented when the wind speed is very strong or when the humidity is very low. As temperature increases so does the number of bikes rented. There isn't a big fall of bikes rented when considering Temperature for Washington. In the Seoul dataset Temperature was a big influence to the number of bikes rented. \
 In Washington the busiest weather conditions are Temperature is between 20-30 degrees celsius, wind speed is between 3-6 m/s and Humidity is between 25-75%.
 </p>
- \
 
-## STATISTICAL ANALYSIS :
+## STATISTICAL MODELLING :
 
 #### Linear Modelling Fitting
 
@@ -837,10 +881,16 @@ summary(linear_model_log_seoul)
 ```
 <p>
 The summary gives us some explanation of the data and the influence of each variable has on the variable Count (Number of rented bikes). 
- * Estimation column indicates the gradient value. If the gradient is positive, this means as response variable value increases when the explanatory variable increases. If the gradient is negative this means as the explanatory variable increases that the response variable decreases.
+
+ * Estimation column indicates the gradient value.
+    + If the gradient value is positive (+). That means as the explanatory variable increases, so does the response variable.
+    + If the gradient value is negative (-). That means as the axplanatory variable increases, the response variable increases.
+ * Our variable in this situation are :
+    + Response variable: Count .
+    + Explanatory variable : Season, Humidity, Temperature, WindSpeed.
  * From the above point, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
  * Season "Spring" does not appear in the summary because it is a categorized variable. "Winter", "Autumn" and "Summer" are estimations from the "Spring" Value. Resulting to "Summer" having a gradient -0.0036038 from "Spring". 
- * Our R-Squared value is approximately 0.5 that represents the dependency of each explanatory variable with the response. This means that 50% of the independent variables is  explains the response variable. This shows our variables are independent from each other. A value of 0.5 is not high but also not low, its a medium effect on each other.
+ * Our R-Squared value is approximately 0.5 that represents the dependency the each explanatory variable with the response. This means that 50% of the explanatory variables, explain the response variable. A value of 0.5 is not high but also not low, its a medium effect on each other.
  * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Temperature, Humidity and Season are a big influence on the outcome of the data.
 </p>
 
@@ -852,14 +902,15 @@ summary(linear_model_log_wash)
 ```
 <p>
 Now we will explain the summary data for Washington DC data.
- * From the above point, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
+
+ * From the above summary, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
  * Season "Spring" does not appear in the summary because it is a categorized variable. "Winter", "Autumn" and "Summer" are estimations from the "Spring" Value. Resulting to "Summer" having a gradient -0.3651680 from "Spring". 
-  * Our R-Squared value is approximately 0.3 that represents the dependency of each explanatory variable with the response. This means that 30% of the independent variables is  explains the response variable. This shows our variables are independent from each other. A value of 0.3 is low measure, this means a lot of data are away from the slope.
+ * Our R-Squared value is approximately 0.3 that represents the dependency of the explanatory variable with the response. This means that 30% of the explanatory variables, explain the response variable. A value of 0.3 is low , this means the explanatory variables do not explain the response to satisfied proportion.
  * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Wind Speed is the biggest influence on the outcome of the data.
 </p>
 <p>
 We can see that in Seoul Wind Speed was not the biggest influence to the response variable while for Washington it is. Additionally winter in America is a lot busier and the number of rented bikes don't differ a lot from other seasons as they do in Seoul. \
-In both situations our R-Squared value is not high but low and medium. \
+In both situations our R-Squared value is not high. Althought for our Seoul dataset is 0.2 larger. \
 </p>
 
 
@@ -884,8 +935,7 @@ The confidence intervals are not the most reliable source in my opinion for the 
 
 #### Predictions According to Linear Model on Seoul, South Korea.
 <p>
-We will use our linear model to predict future numbers. We first need to create the data we want our future data to represent. We will create a data.frame called predictData holding and representing the future values. We will use the predict() function to predict future data. For the interval argument will be using the value "prediction", this is because we are doing a prediction to get obtain values that are uncertain. We cannot predict future values with certainty since we don't know what might happen. A prediction interval widens the difference between the lower and upper value that the future data will fall in. In my opinion is a safer option because you plan for the worst. Using a confidence interval would have smaller ranges and it is more likely in the future the values wont fall in the interval computed. \ 
-Additionally our R-Squared value is low, this means that our explanatory variables do not explain our response variable  at the level we want. Since is under 0.7, our linear model is not very good.
+We will use our linear model to predict future numbers. We first need to create the data we want our future data to represent. We will create a data.frame called predictData holding and representing the future values of the scenario we want to predict. We will use the predict() function to predict future data. For the interval argument will be using the value "prediction", this is because we are doing a prediction to obtain values that are uncertain. We cannot predict future values with certainty since we don't know what might happen. A prediction interval widens the difference between the lower and upper value that the future data will fall in. In my opinion is a safer option because you plan for the worst. Using a confidence interval would have smaller ranges and it is more likely in the future the values will not fall in the interval computed. \ 
 </p>
 ```{r, message=FALSE, fig.align='center', fig.height=8}
 ## Need to create the data that we want our prediction to be based on 
@@ -914,7 +964,7 @@ After applying the prediction we can see the mean is 4.276058 and the values wil
 </p>
 
 <p>
-We have reached the end of the project. I will append in the end, a section called Appendix which will hold code of my self-created functions to undertake some of the processes in the Data Wrangling.
+We have reached the end of the project. I will append in the end, a section called Appendix which will hold code of my self-declared functions to undertake some of the processes in the Data Wrangling.
 </p>
 
 ## APPENDIX 
