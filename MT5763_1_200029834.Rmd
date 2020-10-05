@@ -13,7 +13,10 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 ###### GitHub repository is: https://github.com/AMLoucas/MT5763_1_200029834 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 ```{r, include=FALSE}
 ## Functions that will be used in the program miltiple times.
 ## For deleting unwanted columns.
@@ -50,13 +53,20 @@ createFullDate <- function(dataFrame){
 }
 
 ```
+<<<<<<< HEAD
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
+=======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
  
 ## INTRODUCTION :
 
 <p>
 <<<<<<< HEAD
+<<<<<<< HEAD
 The purpose of the first individual project is to apply data analysis mechanisms on our two given datasets. These mechanisms will allow us to better understand what the data is representing and give us the opportunity to visualize the specific characteristics we are mostly interested in. In the project we are required to use a version control system and R Markdown. These two techniques offer the power of reproducible and is one the main principles program's should have. The version control system we will be using for the assignment is 'Git' and the project will be uploaded on GitHub. The link of the online repository is: [https://github.com/AMLoucas/MT5763_1_200029834](https://github.com/AMLoucas/MT5763_1_200029834 )
+=======
+The purpose of the first individual project is to apply data analysis mechanisms on our two given datasets. These mechanisms will allow us to better understand what the data is representing and give us the opportunity to visualize the specific characteristics we are mostly interested in. In the project we are required to use a version control system and R Markdown. These two techniques offer the power of reproducible and is one the main principles program's should have. The version control system we will using for the assignment is 'Git'. The link of the repository that the project is store is  here :[https://github.com/AMLoucas/MT5763_1_200029834](https://github.com/AMLoucas/MT5763_1_200029834 )
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 The purpose of the first individual project is to apply data analysis mechanisms on our two given datasets. These mechanisms will allow us to better understand what the data is representing and give us the opportunity to visualize the specific characteristics we are mostly interested in. In the project we are required to use a version control system and R Markdown. These two techniques offer the power of reproducible and is one the main principles program's should have. The version control system we will using for the assignment is 'Git'. The link of the repository that the project is store is  here :[https://github.com/AMLoucas/MT5763_1_200029834](https://github.com/AMLoucas/MT5763_1_200029834 )
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
@@ -68,8 +78,13 @@ During the process of the project we will be working with 2 specific data sets (
   * BikeWashingtonDC.csv
   
 <<<<<<< HEAD
+<<<<<<< HEAD
 These two data sets contain the number of bikes rented on specific dates and times in each of the continents/states together with other variables that might influence the number of rented bikes. For example we are provided with Temperature, Wind Speed, Humidity and etc values that influence the demand of a rented bike in a good or bad way. \
 The two csv files beginning state is very 'messy', data is in different unit of measurements and column names do not explain the attributes in a satisfactory way. To ensure our calculations, comparisons and understanding of the data is accurate we first need to apply a technique called Data Wrangling. By using this mechanism our data will be updated in a "tidy"/clean state. This will allow us to better understand the data file and omit unwanted values which create clutter in our files. \
+=======
+These two data sets contain the number of bikes rented on specific dates and times in each of the continents/states. Additionally it also provides other variables that might influence the number of rented bikes. For example we are provided with the days Temperature, Wind Speed, Humidity and etc. These phenomena can impact the number of rented bikes in a good or bad way. \
+The two csv files beginning state is very messy, data is in different measure units and column names do not explain the attributes in a satisfactory way. To ensure our calculations, comparisons and understanding of the data is accurate we first need to apply a technique called Data Wrangling. By using this procedure our data will be updated in a "tidy"/clean state. \
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 These two data sets contain the number of bikes rented on specific dates and times in each of the continents/states. Additionally it also provides other variables that might influence the number of rented bikes. For example we are provided with the days Temperature, Wind Speed, Humidity and etc. These phenomena can impact the number of rented bikes in a good or bad way. \
 The two csv files beginning state is very messy, data is in different measure units and column names do not explain the attributes in a satisfactory way. To ensure our calculations, comparisons and understanding of the data is accurate we first need to apply a technique called Data Wrangling. By using this procedure our data will be updated in a "tidy"/clean state. \
@@ -88,6 +103,10 @@ The given techniques will be applied on the two CSV files data:
 library(lubridate)
 library(tidyverse)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+library(plotly)
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 library(plotly)
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
@@ -99,6 +118,7 @@ library(plotly)
 ```{r}
 seoul_Bikes <- read.csv("DATA/BikeSeoul.csv")
 <<<<<<< HEAD
+<<<<<<< HEAD
 head(seoul_Bikes, 5)
 nrow(seoul_Bikes)
 ```
@@ -106,11 +126,16 @@ nrow(seoul_Bikes)
 <p>
 Above we can see the beginning state of the file("BikeSeoul.csv"). We can notice that their are some issues with the architecture of the provided data set.
 =======
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 head(seoul_Bikes, 4)
 ```
 
 <p>
 Above we can see the  beginning state of the file("BikeSeoul.csv"). We can notice that their are some issues with the architecture of the provided data set.
+<<<<<<< HEAD
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
+=======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
   
   * Column names are too long [Rented.Bike.Count, Solar.Radiation..MJ.m2., ...]
@@ -118,8 +143,11 @@ Above we can see the  beginning state of the file("BikeSeoul.csv"). We can notic
   * Values are too long and take more time to code ['No Holiday']
   * We cannot see it in the first 4 rows, but there are records that do not offer data. Some records had not bike rents and so empty cells or NA values are provided.
 <<<<<<< HEAD
+<<<<<<< HEAD
   * Too many unwanted fields/columns in the table that provide clutter to our code [Visibility..10m., Solar.Radiation..MJ.m2., Rainfall.mm.]
   * Need to convert columns to correct type/class. Date, Holiday, Seasons are of type character, should be Date and factors respectively
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 
@@ -127,6 +155,7 @@ These problems create clutter in the data and make it harder for us to understan
 </p>
 <br><br />
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #### Undertaking Data Wrangling on the Seoul, South Korea
 <p>
@@ -163,6 +192,8 @@ seoul_Bikes <- seoul_Bikes %>%
   # Converting Season to a factor with an order/levels Spring>Summer>Autumn>Winter.
   mutate(Season = factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter")))
 =======
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 #### [TASK 1]
 <p>
 
@@ -332,6 +363,9 @@ seoul_Bikes <- seoul_Bikes %>%
 
 ## Printing column names and first 6 rows to show the end result of the data that has been cleaned.
 names(seoul_Bikes)
+<<<<<<< HEAD
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
+=======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 ```
 <br><br />
@@ -340,11 +374,17 @@ names(seoul_Bikes)
 ```{r,}
 head(seoul_Bikes)
 <<<<<<< HEAD
+<<<<<<< HEAD
 nrow(seoul_Bikes)
 ```
 <br><br />
 <p>
 After applying all the Data Wrangling procedures needed to the file we can observe a huge difference from the state the file was first read. First of all, we can see we have less records (number of rows), because we deleted the rows that we had no bikes rented. Secondly we removed columns that did not offer us with valuable information and data can be read easier now. Thirdly, columns now have appropriate names and the user can understand what each column is representing. Lastly by changing the class types of the columns to more appropriate will help us later on when we compare the files with visualizing methods and statystical analysis.
+=======
+```
+<br><br />
+<p>
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 ```
 <br><br />
@@ -358,7 +398,10 @@ We have successfully Data Wrangled the first file(Seoul), now we need to apply D
 washington_Bikes <- read.csv("DATA/BikeWashingtonDC.csv")
 head(washington_Bikes)
 <<<<<<< HEAD
+<<<<<<< HEAD
 nrow(washington_Bikes)
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 ```
@@ -366,6 +409,7 @@ nrow(washington_Bikes)
 Above we can see the  beginning state of the file ("BikeWashingtonDC.csv"). We can notice that their are some issues with the architecture of the provided data set.
   
   * Column names are acronyms, each user can interpret it differently [cnt, temp, atemp, hum, ...]
+<<<<<<< HEAD
 <<<<<<< HEAD
   * Cell values are not clear [Column season has values (1,2,3,4), which number represents which season?]
   * Some values are in binary values which not everyone understands [holiday, workingday]
@@ -376,11 +420,17 @@ Above we can see the  beginning state of the file ("BikeWashingtonDC.csv"). We c
   * Some values are in binary values which not evryone understands [holiday, workingday]
   * We have some kind of repeated data [dteday -> (yr,mnth,weekday), workingday -> (holiday)]
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
+=======
+  * Values are not clear [Column season has values (1,2,3,4), which number represents which season?]
+  * Some values are in binary values which not evryone understands [holiday, workingday]
+  * We have some kind of repeated data [dteday -> (yr,mnth,weekday), workingday -> (holiday)]
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 
 These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract estimates.
 </p>
 <br><br />
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #### Undertaking Data Wrangling on the Washington DC, America
 <p>
@@ -452,6 +502,8 @@ nrow(washington_Bikes)
 By applying the Data Wrangling techniques we applied on the first file, we managed to bring the architecture and data structure of both files to the same one. Converting Humidity, Temperature, WindSpeed to the correct measurement units, makes our two files compatible for comparisons. Our columns share the same structure, resulting to both files being interpreted the same way. \
 We have successfully Data Wrangled the second file (Washington). Now we can move on to Data Visualisation. \
 =======
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 #### [TASK 1]
 <p>
 
@@ -691,6 +743,9 @@ head(washington_Bikes)
 <br><br />
 <p>
 We have successfully Data Wrangled the second file (Washington). Now our two files are compatible with each other. Sharing same column names and measure units are the same for each column. \
+<<<<<<< HEAD
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
+=======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 We will now proceed to the data visualization tasks.
 </p>
@@ -698,8 +753,12 @@ We will now proceed to the data visualization tasks.
 ## DATA VISUALISATION :
 <p>
 <<<<<<< HEAD
+<<<<<<< HEAD
 Using package ggplot2 we can create different plots and visualize characteristics of our data. In this section of the project we will manipulate the ggplot2 library and compute different plots to examine hypothesis. Data can be more understandable when its visualized rather than reading a spreadsheets with numbers. An image can be worth a 1000 words. \
 For each visualizing aspect we will examine, i will be producing different graphs for each file instead of combining both data sets and implementing them in one graph. The reason behind this decision , is because the individual data files have been recorder in different years and times. Additionally Wind Speed, Humidity, Temperature are again in slightly different ranges, as you will see it below. Because of the different time frames and value ranges, this will create clutter and misinterpreting the data.
+=======
+Using package ggplot2 we can create different plots and visualize characteristics of our data. In this section of the project we will manipulate the ggplot2 library and compute different plots to examine hypothesis. Data can be more understandable when its visualized rather than reading a spreadsheets with numbers. An image can be worth a 1000 words.
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 =======
 Using package ggplot2 we can create different plots and visualize characteristics of our data. In this section of the project we will manipulate the ggplot2 library and compute different plots to examine hypothesis. Data can be more understandable when its visualized rather than reading a spreadsheets with numbers. An image can be worth a 1000 words.
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
@@ -1130,10 +1189,13 @@ predict(linear_model_log_wash,
 ```
 <p>
 <<<<<<< HEAD
+<<<<<<< HEAD
 After applying the prediction we can see the mean is 4.276058 and the values will range from 2.19759 to 6.354526 for variable Count when Season will be "Winter", Temperature will be 0 degrees celsius, Humidity will be up to 20% and Wind Speed will be 0.5 m/s . \
 </p>
 
 =======
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 After applying the prediction we can see the mean is 4.276058 and the values will range from 2.19759 to 6.354526 for variable Count when Season will be "Winter", Temperature will be 0 degrees celsius, Humidity will be up to 20% and Wind Speed will be 0.5 m/s
 </p>
 
@@ -1183,5 +1245,8 @@ createFullDate <- function(dataFrame){
 
 ```
 
+<<<<<<< HEAD
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
+=======
 >>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 
