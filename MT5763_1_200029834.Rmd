@@ -12,11 +12,54 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE)
 ```
 ###### GitHub repository is: https://github.com/AMLoucas/MT5763_1_200029834 
+<<<<<<< HEAD
+=======
+```{r, include=FALSE}
+## Functions that will be used in the program miltiple times.
+## For deleting unwanted columns.
+deleteColumn <- function(dataFrame, columns){
+  for (col in columns){
+    dataFrame <- dataFrame %>%
+      select(-col) ## '-' notation means to select all except the given column.
+  }
+  return(dataFrame)
+}
+
+## For converting a column to class Date.
+## formatDate is used because for the conversion you need to specify in what format your date is in.
+## Using functions that tidyverse and lubridate offer.
+convertDate <- function(dataFrame, formatDate){
+  dataFrame <- dataFrame %>%
+    mutate(Date = (as_date(parse_date_time(Date,formatDate)))) 
+  return(dataFrame)
+}
+
+## For Creating new Column FullDate holding Date and Hour of the day.
+## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+createFullDate <- function(dataFrame){
+  dataFrame <- dataFrame %>%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
+                                  , month = as.integer(format(Date, format="%m"))
+                                  ,day = as.integer(format(Date, format="%d"))
+                                  , hour = Hour 
+                                  ,min = 0
+                                  , sec = 0 ))
+
+  return(dataFrame)
+  
+}
+
+```
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
  
 ## INTRODUCTION :
 
 <p>
+<<<<<<< HEAD
 The purpose of the first individual project is to apply data analysis mechanisms on our two given datasets. These mechanisms will allow us to better understand what the data is representing and give us the opportunity to visualize the specific characteristics we are mostly interested in. In the project we are required to use a version control system and R Markdown. These two techniques offer the power of reproducible and is one the main principles program's should have. The version control system we will be using for the assignment is 'Git' and the project will be uploaded on GitHub. The link of the online repository is: [https://github.com/AMLoucas/MT5763_1_200029834](https://github.com/AMLoucas/MT5763_1_200029834 )
+=======
+The purpose of the first individual project is to apply data analysis mechanisms on our two given datasets. These mechanisms will allow us to better understand what the data is representing and give us the opportunity to visualize the specific characteristics we are mostly interested in. In the project we are required to use a version control system and R Markdown. These two techniques offer the power of reproducible and is one the main principles program's should have. The version control system we will using for the assignment is 'Git'. The link of the repository that the project is store is  here :[https://github.com/AMLoucas/MT5763_1_200029834](https://github.com/AMLoucas/MT5763_1_200029834 )
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 </p>
 <p>
 During the process of the project we will be working with 2 specific data sets (CSV files.) 
@@ -24,8 +67,13 @@ During the process of the project we will be working with 2 specific data sets (
   * BikeSeoul.csv
   * BikeWashingtonDC.csv
   
+<<<<<<< HEAD
 These two data sets contain the number of bikes rented on specific dates and times in each of the continents/states together with other variables that might influence the number of rented bikes. For example we are provided with Temperature, Wind Speed, Humidity and etc values that influence the demand of a rented bike in a good or bad way. \
 The two csv files beginning state is very 'messy', data is in different unit of measurements and column names do not explain the attributes in a satisfactory way. To ensure our calculations, comparisons and understanding of the data is accurate we first need to apply a technique called Data Wrangling. By using this mechanism our data will be updated in a "tidy"/clean state. This will allow us to better understand the data file and omit unwanted values which create clutter in our files. \
+=======
+These two data sets contain the number of bikes rented on specific dates and times in each of the continents/states. Additionally it also provides other variables that might influence the number of rented bikes. For example we are provided with the days Temperature, Wind Speed, Humidity and etc. These phenomena can impact the number of rented bikes in a good or bad way. \
+The two csv files beginning state is very messy, data is in different measure units and column names do not explain the attributes in a satisfactory way. To ensure our calculations, comparisons and understanding of the data is accurate we first need to apply a technique called Data Wrangling. By using this procedure our data will be updated in a "tidy"/clean state. \
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 Once the csv files are in a neat state, we will start applying visualizing processes to explore the relationships between rented bikes in  Washington, DC (USA) with Seoul (South Korea). Additionally we will utilize the visualizing diagrams to examine the influence of each variable on the number of rented bikes. \
 Lastly, we will implement statistical analysis methods, which will be helpful for predictive purposes. In addition to prediction methods, we will be able to examine if the variables and the data is reliable to make future projections on.  \
 The given techniques will be applied on the two CSV files data:
@@ -39,6 +87,10 @@ The given techniques will be applied on the two CSV files data:
 ## Importing libraries needed to use specific functions commands.
 library(lubridate)
 library(tidyverse)
+<<<<<<< HEAD
+=======
+library(plotly)
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 ```
 
 ## DATA WRANGLING :
@@ -46,24 +98,36 @@ library(tidyverse)
 ### Seoul, South Korea Data File beginning state
 ```{r}
 seoul_Bikes <- read.csv("DATA/BikeSeoul.csv")
+<<<<<<< HEAD
 head(seoul_Bikes, 5)
 nrow(seoul_Bikes)
 ```
 
 <p>
 Above we can see the beginning state of the file("BikeSeoul.csv"). We can notice that their are some issues with the architecture of the provided data set.
+=======
+head(seoul_Bikes, 4)
+```
+
+<p>
+Above we can see the  beginning state of the file("BikeSeoul.csv"). We can notice that their are some issues with the architecture of the provided data set.
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
   
   * Column names are too long [Rented.Bike.Count, Solar.Radiation..MJ.m2., ...]
   * Unclear column names [Dew.point.temperature.C. ,]
   * Values are too long and take more time to code ['No Holiday']
   * We cannot see it in the first 4 rows, but there are records that do not offer data. Some records had not bike rents and so empty cells or NA values are provided.
+<<<<<<< HEAD
   * Too many unwanted fields/columns in the table that provide clutter to our code [Visibility..10m., Solar.Radiation..MJ.m2., Rainfall.mm.]
   * Need to convert columns to correct type/class. Date, Holiday, Seasons are of type character, should be Date and factors respectively
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 
 These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract the correct estimates needed.
 </p>
 <br><br />
 
+<<<<<<< HEAD
 #### Undertaking Data Wrangling on the Seoul, South Korea
 <p>
 
@@ -98,17 +162,194 @@ seoul_Bikes <- seoul_Bikes %>%
   mutate(Holiday = factor(Holiday, levels = c("Yes", "No"))) %>%
   # Converting Season to a factor with an order/levels Spring>Summer>Autumn>Winter.
   mutate(Season = factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter")))
+=======
+#### [TASK 1]
+<p>
+
+ * Filter out observations for which no bike count data was collected, then remove the functioning day column as it is no longer required. \
+
+**Implementation idea** \
+Column 'Functioning Day' states if a bike was rented or not. We will have to filter through the rows and obtaining the records that have value "Yes" for attribute 'Functioning Day'. These are the records that a bike was rented. Once we have obtained these rows we can remove the column 'Functioning Day'.
+</p>
+```{r}
+## Number of rows before removing unneeded records are:
+nrow(seoul_Bikes)
+seoul_Bikes <- seoul_Bikes %>%
+  filter(Functioning.Day != "No") %>% ## Filter out the rows with Functioning.Day equals "No"
+  select(-Functioning.Day) ## Remove column Functioning.Day
+## Number of rows after removing unneeded records are:
+nrow(seoul_Bikes)
+```
+<br><br />
+
+#### [TASK 2]
+<p>
+
+ * Where necessary, change the name of the columns to the appropriate ones given in Instructions. \
+
+From our first glimpse of the table we can notice that some column names do not have appropriate names. We need to covnert the following columns names.
+
+  * 'Rented.Bike.Count' to 'Count'
+  * 'Temperature.C.' to 'Temperature'
+  * 'Wind.speed..m.s.' to 'WindSpeed'
+  * 'Seasons' to 'Season'
+  * 'Humidity...' to 'Humidity'
+
+**Implementation idea** \
+Using function rename() from tidyverse we can simply rename the column names to more appropriate ones.
+</p>
+```{r}
+## Header Names before Renaming
+names(seoul_Bikes)
+seoul_Bikes <- seoul_Bikes %>%
+  rename(Count = Rented.Bike.Count, ## Using function we are renaming the columns.
+         Temperature = Temperature.C., 
+         WindSpeed = Wind.speed..m.s., 
+         Season = Seasons,
+         Humidity = Humidity...)
+## Header Names after Renaming
+names(seoul_Bikes)
+```
+<br><br />
+
+#### [TASK 3] 
+<p>
+ 
+ * Convert Date to a date object. \
+ 
+Column Date is a variable of type character ate the moment. \
+**Implementation idea** \
+With the help of tidyverse function 'as_date()' we will change the type/class of the attribute. The code has been created in a self-declared function.[The code for the function can be found in the Appendix which is placed in the end of the report. FUNCTION 2]
+</p>
+```{r}
+## Printing class of column Date before mutation.
+class(seoul_Bikes$Date)
+
+seoul_Bikes <- seoul_Bikes %>%
+  convertDate("dmy") ## Need to specify the format of the date in the cell before converting.
+## Printing class of column Date after mutation.
+class(seoul_Bikes$Date)
+```
+<br><br />
+
+#### [TASK 4]
+<p>
+
+ * Create a new variable called FullDate which includes the hour in it (set minute and second to zero). For example, if Date = 2017-12-01 and Hour = 15, then FullDate = 2017-12-01 15:00:00 . \
+
+**Implementation idea** \
+With help of package lubridate we have a function called 'make_datetime' which does this action for us. It also converts it in the correct Date format that is being asked. Again the code is implemented in a self-declared function.[The code for the function can be found in the Appendix which is placed in the end of the report. FUNCTION 3]
+</p>
+```{r}
+## Printing column names to show that FullDate does not exist.
+names(seoul_Bikes)
+## Calling a self-declared function to undertake this task.
+seoul_Bikes <- seoul_Bikes %>%
+  createFullDate()
+## Printing column names to show creation of FullDate.
+names(seoul_Bikes)
+## Printing first 6 rows of FullDate to show the value is in correct format.
+head(seoul_Bikes$FullDate)
+```
+<br><br />
+
+#### [TASK 5] 
+<p>
+
+ * Change the factor levels of Holiday to Yes / No (use this order). \
+    + 'No Holiday' to 'No'
+    + 'Holiday' to 'Yes'
+
+Additionally to change the column type/class from 'character' to 'factor'. \
+The reason we want to apply this change is to be able order our data to the bikes rented during a holiday and the ones rented when it was not a holiday. Factor type allows us to categorize data. \
+**Implemantation idea** \
+Using tidyverse function mutate in combination with ifelse() conditional statement we will change the record values. Once the inputs have changed we create it to factors/category with the order :
+
+  * Yes > No
+
+</p>
+```{r}
+## Printing the 6 fist rows to show factor values before changing
+head(seoul_Bikes$Holiday)
+## Printing the class of Holiday to show its a 'character'
+class(seoul_Bikes$Holiday)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Holiday = ifelse(Holiday == "No Holiday", "No", "Yes")) %>% ## Changing values to Yes & No
+  mutate(Holiday = factor(Holiday, levels = c("Yes", "No"))) ## Changing type to factor with seq order.
+## Printing the 6 fist rows to show factor values have changed.
+head(seoul_Bikes$Holiday)
+## Printing the class of Holiday to show its a 'factor'
+class(seoul_Bikes$Holiday)
+```
+<br><br />
+
+#### [TASK 6] 
+<p>
+
+ * Change the order of the Season factor levels to:
+    + Spring
+    + Summer
+    + Autumn
+    + Winter
+    From highest to lowest. \
+    
+**Implementation idea** \
+Using tidyverse 'mutate()' function, we will convert the column to a factor and specify the order of the levels we want. Since the values are already "Spring", "Summer", "Autumn" and "Winter", their is not need to change them.
+</p>
+```{r}
+## Printing class of the column to show its not a factor yet.
+class(seoul_Bikes$Season)
+seoul_Bikes <- seoul_Bikes %>%
+  mutate(Season = factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter")))
+## Printing the 6 fist rows to show factor levels order after the change of class
+head(seoul_Bikes$Season)
+```
+<br><br />
+
+#### [TASK 7]
+<p>
+Remove the following columns: 
+
+ * visibility
+ * dew point temperature
+ * solar radiation
+ * rainfall
+ * snowfall
+
+**Implementation idea** \
+Using tidyverse function 'select' and the notation of the '-' we will remove the unwanted columns. I have used a self-declared function to undertake this process.[The code for the function can be found in the Appendix which is placed in the end of the report. FUNCTION 1]
+</p>
+```{r}
+## Printing the column names of the table before removing unwanted data.
+names(seoul_Bikes)
+## Calling a self-declared function to undertaken given task.
+seoul_Bikes <- seoul_Bikes %>%
+  deleteColumn( c("Visibility..10m.",
+                  "Solar.Radiation..MJ.m2.",
+                  "Rainfall.mm.",
+                  "Dew.point.temperature.C.",
+                  "Snowfall..cm."))
+
+## Printing column names and first 6 rows to show the end result of the data that has been cleaned.
+names(seoul_Bikes)
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 ```
 <br><br />
 
 ###### The result of Seoul, South Korea Data File after Data Wrangling is : 
 ```{r,}
 head(seoul_Bikes)
+<<<<<<< HEAD
 nrow(seoul_Bikes)
 ```
 <br><br />
 <p>
 After applying all the Data Wrangling procedures needed to the file we can observe a huge difference from the state the file was first read. First of all, we can see we have less records (number of rows), because we deleted the rows that we had no bikes rented. Secondly we removed columns that did not offer us with valuable information and data can be read easier now. Thirdly, columns now have appropriate names and the user can understand what each column is representing. Lastly by changing the class types of the columns to more appropriate will help us later on when we compare the files with visualizing methods and statystical analysis.
+=======
+```
+<br><br />
+<p>
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 We have successfully Data Wrangled the first file(Seoul), now we need to apply Data Wrangling to the second file(Washington). The conventions which we will apply should bring the both files in a compatible format. Names of columns and measurements units must be the same, so we can compare the two data files.
 </p>
 
@@ -116,21 +357,31 @@ We have successfully Data Wrangled the first file(Seoul), now we need to apply D
 ```{r,}
 washington_Bikes <- read.csv("DATA/BikeWashingtonDC.csv")
 head(washington_Bikes)
+<<<<<<< HEAD
 nrow(washington_Bikes)
+=======
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 ```
 <p>
 Above we can see the  beginning state of the file ("BikeWashingtonDC.csv"). We can notice that their are some issues with the architecture of the provided data set.
   
   * Column names are acronyms, each user can interpret it differently [cnt, temp, atemp, hum, ...]
+<<<<<<< HEAD
   * Cell values are not clear [Column season has values (1,2,3,4), which number represents which season?]
   * Some values are in binary values which not everyone understands [holiday, workingday]
   * We have some kind of repeated data [dteday -> (yr,mnth,weekday), workingday -> (holiday)]
   * Our units of measurments for WindSpeed, Humidity, Temperature are different.
+=======
+  * Values are not clear [Column season has values (1,2,3,4), which number represents which season?]
+  * Some values are in binary values which not evryone understands [holiday, workingday]
+  * We have some kind of repeated data [dteday -> (yr,mnth,weekday), workingday -> (holiday)]
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 
 These problems create clutter in the data and make it harder for us to understand it. In the first glimpse the data is difficult to read and extract estimates.
 </p>
 <br><br />
 
+<<<<<<< HEAD
 #### Undertaking Data Wrangling on the Washington DC, America
 <p>
 
@@ -200,13 +451,258 @@ nrow(washington_Bikes)
 <p>
 By applying the Data Wrangling techniques we applied on the first file, we managed to bring the architecture and data structure of both files to the same one. Converting Humidity, Temperature, WindSpeed to the correct measurement units, makes our two files compatible for comparisons. Our columns share the same structure, resulting to both files being interpreted the same way. \
 We have successfully Data Wrangled the second file (Washington). Now we can move on to Data Visualisation. \
+=======
+#### [TASK 1]
+<p>
+
+ * Remove the following columns: unique record index, year, month, day of the week, working day, weather condition, normalised feeling temperature and number of bikes rented by casual and registered users
+(i.e. keep only the total count). \
+We will need to remove the following.
+    +instant (unique number for each record)
+    + yr (year)
+    + mnth (month)
+    + weekday (day of the week)
+    + workingday (if the specific day was a holiday or not)
+    + weathersit (weather condition)
+    + atemp (normalized feeling temparature)
+    + casual (number of bikes rented by casul users)
+    + registered (number of bikes rented by registered users)
+  
+**Implementation idea** \
+Using function select() form tidyverse package and the notation '-' we can select all the columns we want to remove. Using the same self-declared function that was used in the first CSV file.[FUNCTION 1]
+</p>
+```{r}
+## Columns in the file before removing
+names(washington_Bikes)
+## Calling self-declared function to undertake given task 
+washington_Bikes <- washington_Bikes %>%
+  deleteColumn( c("instant",
+                  "yr",
+                  "mnth",
+                  "weekday",
+                  "workingday",
+                  "weathersit",
+                  "atemp",
+                  "casual",
+                  "registered"))
+## Columns in file after removing.
+names(washington_Bikes)
+```
+<br><br />
+
+#### [TASK 2]
+<p>
+
+ *Change the name of the columns to match the ones for Seoul. We need to change the following table :
+   + 'dteday' to 'Date'
+   + 'cnt' to 'Count'
+   + 'hr' to 'Hour'
+   + 'temp' to 'Temperature'
+   + 'hum' to 'Humidity'
+   + 'windspeed' to 'WindSpeed'
+   + 'season' to 'Season'
+   + 'holiday' to 'Holiday'
+ 
+The column names should have same case-sensitivity if we would like to join them later. \
+**Implementation idea** \
+Using function rename() form tidyverse package we can rename the already existing column names.
+</p>
+```{r}
+## Header Names before Renaming
+names(washington_Bikes)
+washington_Bikes <- washington_Bikes %>%
+  rename(Count = cnt, ## Using function we are renaming the columns.
+         Temperature = temp, 
+         WindSpeed = windspeed, 
+         Season = season,
+         Humidity = hum,
+         Date = dteday,
+         Hour = hr,
+         Holiday = holiday)
+## Header Names after Renaming
+names(washington_Bikes)
+
+```
+<br><br />
+
+#### [TASK 3]
+<p>
+ * Convert Humidity to a %. We need to have the measure units same across both data frames.
+    + Value is divided by 100 at the moment, so we will need to multiply it by 100 to get it to a % value.
+  
+**Implementation idea** \
+Using function mutate() from tidyverse package we can modify the existing columnn and its fields.
+</p>
+```{r}
+## Printing first 6 rows to show the value now in decimal
+head(washington_Bikes$Humidity)
+washington_Bikes <- washington_Bikes %>%
+  mutate(Humidity = Humidity * 100) ## multiply existing value with 100 to make a percentage value.
+## Printing first 6 rows to show values out of a hundred (in %), smallest is 0 and largest 100.
+head(washington_Bikes$Humidity)
+```
+<br><br />
+
+#### [TASK 4]
+<p>
+ * Convert Temperature to degrees Celsius. \
+   + Value is normalized which means formula $[(value -Tmin)/Tmax-Tmin]$ was applied on it. $[Tmin = -8, Tmax = 39]$
+   + We have to reverse this formula which means we have to apply formula $[(value)*(Tmax-Tmin)+Tmin]$ . $[Tmin = -8, Tmax = 39]$
+
+**Implemantation idea** \
+Using function mutate() from tidyverse package we can modify the existing column and its fields.
+</p>
+```{r}
+## Printing first 6 rows to show the value are now normalized.
+head(washington_Bikes$Temperature)
+
+Tmin <- -8
+Tmax <- 39
+washington_Bikes <- washington_Bikes %>%
+  mutate(Temperature = (Temperature)*(Tmax-Tmin)+Tmin) ## apply formula so we convert back to degree celsius.
+## Printing first 6 rows to show values out of in degree celsius.
+head(washington_Bikes$Temperature)
+```
+<br><br />
+
+#### [TASK 5]
+<p>
+ * Convert WindSpeed to m/s. At the moment WindSpeed is in 69km/s \
+    + First we need to convert WindSpeed to km/s, so we multiply by 69 because its divided by $69km/s$
+    + After we apply the given formula $Wind (m/s) = 0.2777778 × Wind (km/h)$ , formula was found found from [goodcalculator.com](https://goodcalculators.com/wind-speed-converter/)
+  
+**Implementation idea** \
+Using function mutate() from tidyverse package we can modify the existing column and its fields.
+</p>
+```{r}
+## Printing first 6 rows to show the value are in (km/s)/69
+head(washington_Bikes$WindSpeed)
+makeToKM <- 69
+multiplayerConstant <- 0.2777778
+washington_Bikes <- washington_Bikes %>%
+  mutate(WindSpeed = ((WindSpeed)*(makeToKM))*multiplayerConstant) ## apply formula so we convert back to degree m/s
+## Printing first 6 rows to show values are now in m/s
+head(washington_Bikes$WindSpeed)
+```
+<br><br />
+
+#### [TASK 6]
+<p>
+ * Change the factor levels of Season to Spring, Summer, Autumn and Winter (in this order to match Seoul’s one). We also need to change the values of the Seasons. In this file they are valued with integers. We need to convert values :=
+   + '1' to 'Winter'
+   + '2' to 'Spring'
+   + '3' to 'Summer'
+   + '4' to 'Autumn'
+   In the order:
+      - Spring > Summer > Autumn > Winter 
+ 
+**Implementation idea** \
+Using function mutate() form tidyverse package and ifelse() conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field to a factor.
+</p>
+```{r}
+## Printing the 6 fist rows to show factor values before changing
+head(washington_Bikes$Season)
+## Printing the class of Season to show its a 'integer'
+class(washington_Bikes$Season)
+washington_Bikes <- washington_Bikes %>%
+  mutate(Season = ifelse(Season == 1, "Winter", Season)) %>% ## Changing values to the appropriate factors Winter | Summer | Autumn | Spring.
+  mutate(Season = ifelse(Season == 2, "Spring", Season)) %>% 
+  mutate(Season = ifelse(Season == 3, "Summer", Season)) %>% 
+  mutate(Season = ifelse(Season == 4, "Autumn", Season)) %>% 
+  mutate(Season = factor(Season, levels = c("Spring", "Summer", "Autumn", "Winter"))) ## Changing type to factor with seq order.
+## Printing the 6 fist rows to show factor values have changed.
+head(washington_Bikes$Season)
+## Printing the class of Season to show its a 'factor'
+class(washington_Bikes$Season)
+
+```
+<br><br />
+
+#### [TASK 7]
+<p>
+ * Change the factor levels of Holiday to Yes / No (use this order). \
+    + 0 to 'No'
+    + 1 to 'Yes'
+    In order :
+        - Yes > No
+
+**Implementation idea** \
+Using function mutate() form tidyverse package and ifelse() conditional statement we will change the fields values. After by using the mutate() function from tidyverse we can change the class of the field  to a factor.
+</p>
+```{r}
+## Printing the 6 fist rows to show factor values before changing
+head(washington_Bikes$Holiday)
+## Printing the class of Holiday to show its a 'character'
+class(washington_Bikes$Holiday)
+washington_Bikes <- washington_Bikes %>%
+  mutate(Holiday = ifelse(Holiday == 0, "No", "Yes")) %>% ## Changing values to Yes & No (0=No, 1=Yes).
+  mutate(Holiday = factor(Holiday, levels = c("Yes", "No"))) ## Changing type to factor with seq order.
+## Printing the 6 fist rows to show factor values have changed.
+head(washington_Bikes$Holiday)
+## Printing the class of Holiday to show its a 'factor'
+class(washington_Bikes$Holiday)
+```
+<br><br />
+
+#### [TASK 8]
+<p>
+ * Convert Date to a date object. \
+
+**Implementation idea** \
+With the help of tidyverse function 'as_date()' we will change the type/class of the attribute to date.[FUNCTION 2]
+</p>
+```{r}
+## Printing class of column Date before mutation.
+class(washington_Bikes$Date)
+
+washington_Bikes <- washington_Bikes %>%
+  convertDate("ymd")
+
+## Printing class of column Date after mutation.
+class(washington_Bikes$Date)
+```
+<br><br />
+
+#### [TASK 9]
+<p>
+ * Create a new variable called FullDate which includes the hour in it (set minute and second to zero). For example, if Date = 2017-12-01 and Hour = 15, then FullDate = 2017-12-01 15:00:00 \
+ 
+**Implementation idea** \
+With help of package lubridate we have a function called 'make_datetime' which does this action for us in the format asked. Using the same self-declared function that was used in the first CSV file.[FUNCTION 3]
+</p>
+```{r}
+## Printing column names to show that FullDate does not exist.
+names(washington_Bikes)
+## Calling a self-declared function to apply this task.
+washington_Bikes <- washington_Bikes %>%
+  createFullDate()
+
+## Printing column names to show creation of FullDate.
+names(washington_Bikes)
+## Printing first 6 rows of FullDate to show the value is in correct format.
+head(washington_Bikes$FullDate)
+```
+<br><br />
+
+###### The result of Seoul, South Korea Data File after Data Wrangling is : 
+```{r,}
+head(washington_Bikes)
+```
+<br><br />
+<p>
+We have successfully Data Wrangled the second file (Washington). Now our two files are compatible with each other. Sharing same column names and measure units are the same for each column. \
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 We will now proceed to the data visualization tasks.
 </p>
 
 ## DATA VISUALISATION :
 <p>
+<<<<<<< HEAD
 Using package ggplot2 we can create different plots and visualize characteristics of our data. In this section of the project we will manipulate the ggplot2 library and compute different plots to examine hypothesis. Data can be more understandable when its visualized rather than reading a spreadsheets with numbers. An image can be worth a 1000 words. \
 For each visualizing aspect we will examine, i will be producing different graphs for each file instead of combining both data sets and implementing them in one graph. The reason behind this decision , is because the individual data files have been recorder in different years and times. Additionally Wind Speed, Humidity, Temperature are again in slightly different ranges, as you will see it below. Because of the different time frames and value ranges, this will create clutter and misinterpreting the data.
+=======
+Using package ggplot2 we can create different plots and visualize characteristics of our data. In this section of the project we will manipulate the ggplot2 library and compute different plots to examine hypothesis. Data can be more understandable when its visualized rather than reading a spreadsheets with numbers. An image can be worth a 1000 words.
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 </p>
 
 #### Air temperature variation over the course of a year
@@ -633,7 +1129,59 @@ predict(linear_model_log_wash,
         interval = "prediction")
 ```
 <p>
+<<<<<<< HEAD
 After applying the prediction we can see the mean is 4.276058 and the values will range from 2.19759 to 6.354526 for variable Count when Season will be "Winter", Temperature will be 0 degrees celsius, Humidity will be up to 20% and Wind Speed will be 0.5 m/s . \
 </p>
 
+=======
+After applying the prediction we can see the mean is 4.276058 and the values will range from 2.19759 to 6.354526 for variable Count when Season will be "Winter", Temperature will be 0 degrees celsius, Humidity will be up to 20% and Wind Speed will be 0.5 m/s
+</p>
+
+<p>
+We have reached the end of the project. I will append in the end, a section called Appendix which will hold code of my self-declared functions to undertake some of the processes in the Data Wrangling.
+</p>
+
+## APPENDIX 
+
+```{r, include=TRUE}
+## Functions that will be used in the program multiple times.
+
+# [FUNCTION 1]
+## FOR DELETING UNWANTED COLUMNS
+deleteColumn <- function(dataFrame, columns){
+  for (col in columns){
+    dataFrame <- dataFrame %>%
+      select(-col) ## '-' notation means to select all except the given column.
+  }
+  return(dataFrame)
+}
+
+# [FUNCTION 2]
+## FOR CONVERTING COLUMN TO DATE
+## formatDate is used because for the conversion you need to specify in what format your date is in.
+## Using functions that tidyverse and lubridate offer.
+convertDate <- function(dataFrame, formatDate){
+  dataFrame <- dataFrame %>%
+    mutate(Date = (as_date(parse_date_time(Date,formatDate)))) 
+  return(dataFrame)
+}
+
+# [FUNCTION 3]
+## FOR CREATING A NEW COLUMN CALLED FULLDATE.
+## as.integer(format(Date, format="%Y") -> this command is needed to extract the correct number/attribute from column Date. "%Y" tells the function to extract the year. as.integer() converts the character into an integer becasue field year expects as integer number. All work the same [month, day, hour]
+createFullDate <- function(dataFrame){
+  dataFrame <- dataFrame %>%
+  mutate(FullDate = make_datetime( year = as.integer(format(Date, format="%Y"))
+                                  , month = as.integer(format(Date, format="%m"))
+                                  ,day = as.integer(format(Date, format="%d"))
+                                  , hour = Hour 
+                                  ,min = 0
+                                  , sec = 0 ))
+  return(dataFrame)
+  
+}
+
+```
+
+>>>>>>> 81914e254aafe0738f34c4035f4f00009340f841
 
