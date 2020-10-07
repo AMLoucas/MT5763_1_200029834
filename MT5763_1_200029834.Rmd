@@ -543,6 +543,7 @@ In Washington the busiest weather conditions are Temperature is between 20-30 de
 ```{r}
 linear_model_log_seoul <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed,
                              data = seoul_Bikes)
+seoulResid <- resid(linear_model_log_seoul)
 summary(linear_model_log_seoul)
 ```
 <p>
@@ -557,13 +558,14 @@ The summary gives us some explanation of the data and the influence of each vari
  * From the above point, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
  * Season "Spring" does not appear in the summary because it is a categorized variable. "Winter", "Autumn" and "Summer" are estimations from the "Spring" Value. Resulting to "Summer" having a gradient -0.0036038 from "Spring". 
  * Our R-Squared value is approximately 0.5 that represents the dependency the each explanatory variable with the response. This means that 50% of the explanatory variables, explain the response variable. A value of 0.5 is not high but also not low, its a medium effect on each other. Our linear model is not considered very good. Because half of the points are away from the slope that is determined by these variables.
- * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Temperature, Humidity and Season are a big influence on the outcome of the data.
+ * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Wind Speed are a big influence on the outcome of the data.
 </p>
 
 #### Washinghton DC, America
 ```{r}
 linear_model_log_wash <- lm(log(Count) ~ Season + Humidity + Temperature + WindSpeed, 
                             data = washington_Bikes)
+washResid <- resid(linear_model_log_wash)
 summary(linear_model_log_wash)
 ```
 <p>
@@ -572,10 +574,10 @@ Now we will explain the summary data for Washington DC data.
  * From the above summary, we can observe that as Wind Speed, Temperature increases so does the number of rented bikes. While Humidity increases the number of rented bikes decreases.
  * Season "Spring" does not appear in the summary because it is a categorized variable. "Winter", "Autumn" and "Summer" are estimations from the "Spring" Value. Resulting to "Summer" having a gradient -0.3651680 from "Spring". 
  * Our R-Squared value is approximately 0.3 that represents the dependency of the explanatory variable with the response. This means that 30% of the explanatory variables, explain the response variable. A value of 0.3 is low , this means the explanatory variables do not explain the response to satisfied proportion. Our linear model is not good, only 30% of the records are close to the slope created by the explanatory varibales. The rest 70% are explained by the variables.
- * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data Wind Speed is the biggest influence on the outcome of the data.
+ * From the Pr(>|t|) we can see the variables that make the most influence on the outcome, for this data all variables play an equivelant influence on the outcome of the data.
 </p>
 <p>
-We can see that in Seoul Wind Speed was not the biggest influence to the response variable while for Washington it is. Additionally winter in America is a lot busier and the number of rented bikes don't differ a lot from other seasons as they do in Seoul. \
+We can see that in Seoul Wind Speed was the biggest influence to the response variable while for Washington it was not. Additionally winter in America is a lot busier and the number of rented bikes don't differ a lot from other seasons as they do in Seoul. \
 In both situations our R-Squared value is not high, but low. Although for our Seoul dataset is 0.2 larger. \
 </p>
 
@@ -598,7 +600,13 @@ confint(linear_model_log_wash, level = 0.97)
 <p>
 The confidence intervals are not the most reliable source in my opinion for the given situation. For starters our R-Squared value in both datasets is below 0.5 . This means our linear models are not very good. Additionally confidence intervals do not mean that future values will fall in the resulted ranges. It means that if we run a simulate of this procedure 100 times, 97 times out of the 100 the result will be in the range. But taken under consideration that our R-squared in both linear models is very low, there is highly possibility that this ranges are actually wrong. Resulting to 97 times of the 100 runs of simulation might not fall in the given range.
 </p>
-
+```{r, message=FALSE, fig.align='center', fig.height=8}
+hist(seoulResid)
+hist(washResid)
+```
+<p>
+With this being said, by observing the two histograms above we can conclude that our two models residuals do follow the normality assumption. This shows that it holds the assumptions and has some validity in the results it is outputting.
+</p>
 #### Predictions According to Linear Model on Seoul, South Korea.
 <p>
 We will use our linear model to predict future numbers. We first need to create the data we want our future data to represent. We will create a data.frame called predictData holding and representing the future values of the scenario we want to predict.
